@@ -97,6 +97,57 @@ pub fn list_books(conn: &Connection) -> Result<Vec<Book>> {
     Ok(books)
 }
 
+/// Turn a raw user query into a safe FTS5 MATCH expression: each whitespace
+/// token is reduced to its alphanumerics and made a prefix term, AND-ed
+/// together. Returns empty when nothing usable remains (caller treats that as
+/// "no query"), which also avoids FTS5 syntax errors on punctuation.
+fn build_fts_query(query: &str) -> String {
+    query
+        .split_whitespace()
+        .map(|tok| {
+            tok.chars()
+                .filter(|c| c.is_alphanumeric())
+                .collect::<String>()
+        })
+        .filter(|tok| !tok.is_empty())
+        .map(|tok| format!("{tok}*"))
+        .collect::<Vec<_>>()
+        .join(" ")
+}
+
+/// Full-text search across book metadata and annotation text. Returns book ids
+/// ordered by relevance: title/author matches first (by bm25), then books that
+/// only matched via an annotation. Empty query → empty result.
+pub fn search(conn: &Connection, query: &str) -> Result<Vec<i64>> {
+    let match_expr = build_fts_query(query);
+    if match_expr.is_empty() {
+        return Ok(Vec::new());
+    }
+    let mut ids = Vec::new();
+    let mut seen = std::collections::HashSet::new();
+
+    let mut meta = conn
+        .prepare("SELECT rowid FROM books_fts WHERE books_fts MATCH ?1 ORDER BY bm25(books_fts)")?;
+    let mut push = |id: i64, ids: &mut Vec<i64>| {
+        if seen.insert(id) {
+            ids.push(id);
+        }
+    };
+    for row in meta.query_map([&match_expr], |r| r.get::<_, i64>(0))? {
+        push(row?, &mut ids);
+    }
+
+    let mut anns = conn.prepare(
+        "SELECT a.book_id FROM annotations_fts
+         JOIN annotations a ON a.id = annotations_fts.rowid
+         WHERE annotations_fts MATCH ?1 ORDER BY bm25(annotations_fts)",
+    )?;
+    for row in anns.query_map([&match_expr], |r| r.get::<_, i64>(0))? {
+        push(row?, &mut ids);
+    }
+    Ok(ids)
+}
+
 pub fn get_book(conn: &Connection, id: i64) -> Result<Book> {
     conn.query_row(
         &format!("SELECT {BOOK_COLUMNS} FROM books WHERE id = ?1"),
@@ -505,5 +556,64 @@ mod tests {
         let results = import_dir(&conn, dir.path());
         assert_eq!(results.len(), 2);
         assert_eq!(list_books(&conn).unwrap().len(), 2);
+    }
+
+    #[test]
+    fn fts_search_matches_metadata_and_annotations() {
+        let conn = open_in_memory().unwrap();
+        let dir = tempfile::tempdir().unwrap();
+
+        let mk = |name: &str, bytes: &[u8]| {
+            let ImportResult::Imported { book } = import_file(&conn, &temp_book(&dir, name, bytes))
+            else {
+                panic!("import failed")
+            };
+            book
+        };
+        let moby = mk("moby.epub", b"a");
+        let dune = mk("dune.epub", b"b");
+        set_metadata(
+            &conn,
+            moby.id,
+            "Moby-Dick",
+            Some("Herman Melville"),
+            None,
+            None,
+        )
+        .unwrap();
+        set_metadata(&conn, dune.id, "Dune", Some("Frank Herbert"), None, None).unwrap();
+
+        // an annotation on Dune mentioning "whale" — a term only in Moby's story
+        add_annotation(
+            &conn,
+            &NewAnnotation {
+                book_id: dune.id,
+                cfi: "epubcfi(/6/4!/4/2)".into(),
+                text: "reminds me of a whale".into(),
+                note: None,
+                color: "yellow".into(),
+                style: "highlight".into(),
+            },
+        )
+        .unwrap();
+
+        // title match, prefix
+        assert_eq!(search(&conn, "mob").unwrap(), vec![moby.id]);
+        // author match
+        assert_eq!(search(&conn, "herbert").unwrap(), vec![dune.id]);
+        // annotation-only match
+        assert_eq!(search(&conn, "whale").unwrap(), vec![dune.id]);
+        // no match / punctuation-only is safe
+        assert!(search(&conn, "zzz").unwrap().is_empty());
+        assert!(search(&conn, "!!!").unwrap().is_empty());
+
+        // metadata match ranks before annotation-only match for the same term
+        set_metadata(&conn, moby.id, "The Whale", Some("Melville"), None, None).unwrap();
+        let hits = search(&conn, "whale").unwrap();
+        assert_eq!(hits, vec![moby.id, dune.id]);
+
+        // deleting a book removes it from the index (trigger keeps FTS in sync)
+        remove_book(&conn, moby.id, false).unwrap();
+        assert_eq!(search(&conn, "whale").unwrap(), vec![dune.id]);
     }
 }

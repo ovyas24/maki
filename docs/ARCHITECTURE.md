@@ -63,6 +63,7 @@ regenerate with `pnpm gen-types` after changing them.
 | Command | Purpose |
 | --- | --- |
 | `list_books` | All books; refreshes each book's `missing` flag |
+| `search(query)` | FTS5 search over metadata + annotations → ranked book ids |
 | `import_files(paths)` | Register files/dirs in place (hash, dedup) |
 | `read_book_bytes(id)` | Raw file bytes for foliate-js (binary IPC) |
 | `set_book_metadata(id, …)` | Store webview-extracted metadata |
@@ -84,6 +85,11 @@ SQLite at `~/.local/share/maki/library.db` (WAL). Migrations are embedded in
 [`db.rs`](../src-tauri/core/src/db.rs) and run on startup;
 `PRAGMA user_version` records the applied count. Append-only — never edit a
 shipped migration.
+
+Migration 2 adds FTS5 external-content tables `books_fts` (title, author) and
+`annotations_fts` (text, note), kept in sync with `books`/`annotations` by
+insert/update/delete triggers. `library::search` queries both and returns book
+ids ranked by `bm25`, metadata matches before annotation-only matches.
 
 ```mermaid
 erDiagram

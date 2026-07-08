@@ -44,6 +44,14 @@ pub async fn import_files(
     Ok(results)
 }
 
+/// Full-text search (FTS5) over book metadata and annotations. Returns book
+/// ids ranked by relevance; the frontend maps them to its in-memory books.
+#[tauri::command]
+pub async fn search(state: State<'_, AppState>, query: String) -> CmdResult<Vec<i64>> {
+    let conn = state.conn.lock().unwrap();
+    library::search(&conn, &query).map_err(err)
+}
+
 /// Raw file bytes for the webview to hand to foliate-js / pdf.js.
 #[tauri::command]
 pub async fn read_book_bytes(

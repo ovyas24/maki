@@ -15,7 +15,7 @@
   "library": {
     "title": "Library",
     "continueReading": "Continue Reading",
-    "searchPlaceholder": "Search by title or author…",
+    "searchPlaceholder": "Search title, author, or highlights…",
     "import": "Import Books",
     "empty": {
       "title": "Your library is empty",

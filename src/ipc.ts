@@ -13,6 +13,9 @@ export type { Annotation, Book, ImportResult, NewAnnotation, WatchFolder };
 
 export const listBooks = () => invoke<Book[]>("list_books");
 
+/** FTS5 search over metadata + annotations; returns book ids ranked by relevance. */
+export const searchLibrary = (query: string) => invoke<number[]>("search", { query });
+
 export const importFiles = (paths: string[]) => invoke<ImportResult[]>("import_files", { paths });
 
 export const readBookBytes = async (id: number): Promise<ArrayBuffer> =>

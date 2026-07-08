@@ -42,6 +42,46 @@ const MIGRATIONS: &[&str] = &[
         id INTEGER PRIMARY KEY,
         path TEXT NOT NULL UNIQUE
     );",
+    // 2: FTS5 full-text search over book metadata and annotation text.
+    // External-content tables mirror `books`/`annotations`, kept in sync by
+    // triggers. Backfills existing rows so upgrades index the current library.
+    "CREATE VIRTUAL TABLE books_fts USING fts5(
+        title, author,
+        content='books', content_rowid='id',
+        tokenize='unicode61 remove_diacritics 2'
+    );
+    INSERT INTO books_fts(rowid, title, author) SELECT id, title, author FROM books;
+    CREATE TRIGGER books_ai AFTER INSERT ON books BEGIN
+        INSERT INTO books_fts(rowid, title, author) VALUES (new.id, new.title, new.author);
+    END;
+    CREATE TRIGGER books_ad AFTER DELETE ON books BEGIN
+        INSERT INTO books_fts(books_fts, rowid, title, author)
+            VALUES ('delete', old.id, old.title, old.author);
+    END;
+    CREATE TRIGGER books_au AFTER UPDATE ON books BEGIN
+        INSERT INTO books_fts(books_fts, rowid, title, author)
+            VALUES ('delete', old.id, old.title, old.author);
+        INSERT INTO books_fts(rowid, title, author) VALUES (new.id, new.title, new.author);
+    END;
+
+    CREATE VIRTUAL TABLE annotations_fts USING fts5(
+        text, note,
+        content='annotations', content_rowid='id',
+        tokenize='unicode61 remove_diacritics 2'
+    );
+    INSERT INTO annotations_fts(rowid, text, note) SELECT id, text, note FROM annotations;
+    CREATE TRIGGER annotations_ai AFTER INSERT ON annotations BEGIN
+        INSERT INTO annotations_fts(rowid, text, note) VALUES (new.id, new.text, new.note);
+    END;
+    CREATE TRIGGER annotations_ad AFTER DELETE ON annotations BEGIN
+        INSERT INTO annotations_fts(annotations_fts, rowid, text, note)
+            VALUES ('delete', old.id, old.text, old.note);
+    END;
+    CREATE TRIGGER annotations_au AFTER UPDATE ON annotations BEGIN
+        INSERT INTO annotations_fts(annotations_fts, rowid, text, note)
+            VALUES ('delete', old.id, old.text, old.note);
+        INSERT INTO annotations_fts(rowid, text, note) VALUES (new.id, new.text, new.note);
+    END;",
 ];
 
 /// Open (creating if needed) the library database and run pending migrations.

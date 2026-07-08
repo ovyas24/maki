@@ -2,11 +2,12 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { open as openFileDialog } from "@tauri-apps/plugin-dialog";
 import type { Book } from "../../ipc";
+import { searchLibrary } from "../../ipc";
 import { useLibrary } from "../../store/library";
 import { useSettings, type SortKey } from "../../store/settings";
 import { Icon } from "../../components/Icon";
 import { Button, Dialog, DialogActions, DialogTitle } from "../../components/Dialog";
-import { cn } from "../../lib/utils";
+import { cn, debounce } from "../../lib/utils";
 import { filterAndSort, continueReading } from "./sorting";
 import { ContinueReading } from "./ContinueReading";
 import { BookGrid } from "./BookGrid";
@@ -28,10 +29,31 @@ export function LibraryPage() {
   const [toRemove, setToRemove] = useState<Book | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
-  const visible = useMemo(
-    () => filterAndSort(books, query, settings.sort),
-    [books, query, settings.sort],
+  // FTS5 results (metadata + annotations), tagged with the query they answer.
+  const [fts, setFts] = useState<{ q: string; ids: number[] } | null>(null);
+  const runSearch = useMemo(
+    () => debounce((q: string) => void searchLibrary(q).then((ids) => setFts({ q, ids })), 120),
+    [],
   );
+  useEffect(() => {
+    // Stale results are ignored by the `fts.q === q` guard below, so there's
+    // nothing to reset when the query clears. Re-run when books change too, so
+    // metadata extraction refreshes the index-backed results.
+    const q = query.trim();
+    if (q) runSearch(q);
+  }, [query, books, runSearch]);
+
+  const visible = useMemo(() => {
+    const q = query.trim();
+    if (!q) return filterAndSort(books, "", settings.sort);
+    // Authoritative FTS ordering once it answers this exact query…
+    if (fts && fts.q === q) {
+      const byId = new Map(books.map((b) => [b.id, b]));
+      return fts.ids.map((id) => byId.get(id)).filter((b): b is Book => b !== undefined);
+    }
+    // …instant client fuzzy as a placeholder until it does.
+    return filterAndSort(books, q, settings.sort);
+  }, [books, query, fts, settings.sort]);
   const hero = useMemo(() => continueReading(books), [books]);
 
   // "/" focuses search (unless typing elsewhere)

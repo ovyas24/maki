@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Full-text search (SQLite FTS5) across book titles, authors, and annotation
+  text — the library search box now finds books by what you highlighted, not
+  just their metadata.
+
+### Changed
+
+- Reader page turns now use a "paper slide": a soft leading-edge shadow sweeps
+  across in the turn direction over the page motion, instead of a flat slide.
+
 ## [0.2.0] - 2026-07-08
 
 ### Added
