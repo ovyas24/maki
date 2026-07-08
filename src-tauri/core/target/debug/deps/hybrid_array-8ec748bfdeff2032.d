@@ -1,0 +1,11 @@
+/home/senpai/Documents/shiori/src-tauri/core/target/debug/deps/hybrid_array-8ec748bfdeff2032.d: /home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hybrid-array-0.4.13/src/lib.rs /home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hybrid-array-0.4.13/src/sizes.rs /home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hybrid-array-0.4.13/src/flatten.rs /home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hybrid-array-0.4.13/src/from_fn.rs /home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hybrid-array-0.4.13/src/iter.rs /home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hybrid-array-0.4.13/src/traits.rs /home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hybrid-array-0.4.13/src/../README.md
+
+/home/senpai/Documents/shiori/src-tauri/core/target/debug/deps/libhybrid_array-8ec748bfdeff2032.rmeta: /home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hybrid-array-0.4.13/src/lib.rs /home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hybrid-array-0.4.13/src/sizes.rs /home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hybrid-array-0.4.13/src/flatten.rs /home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hybrid-array-0.4.13/src/from_fn.rs /home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hybrid-array-0.4.13/src/iter.rs /home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hybrid-array-0.4.13/src/traits.rs /home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hybrid-array-0.4.13/src/../README.md
+
+/home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hybrid-array-0.4.13/src/lib.rs:
+/home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hybrid-array-0.4.13/src/sizes.rs:
+/home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hybrid-array-0.4.13/src/flatten.rs:
+/home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hybrid-array-0.4.13/src/from_fn.rs:
+/home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hybrid-array-0.4.13/src/iter.rs:
+/home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hybrid-array-0.4.13/src/traits.rs:
+/home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hybrid-array-0.4.13/src/../README.md:

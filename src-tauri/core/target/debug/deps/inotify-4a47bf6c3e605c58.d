@@ -1,0 +1,10 @@
+/home/senpai/Documents/shiori/src-tauri/core/target/debug/deps/inotify-4a47bf6c3e605c58.d: /home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.3/src/lib.rs /home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.3/src/events.rs /home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.3/src/fd_guard.rs /home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.3/src/inotify.rs /home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.3/src/util.rs /home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.3/src/watches.rs
+
+/home/senpai/Documents/shiori/src-tauri/core/target/debug/deps/libinotify-4a47bf6c3e605c58.rmeta: /home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.3/src/lib.rs /home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.3/src/events.rs /home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.3/src/fd_guard.rs /home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.3/src/inotify.rs /home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.3/src/util.rs /home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.3/src/watches.rs
+
+/home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.3/src/lib.rs:
+/home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.3/src/events.rs:
+/home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.3/src/fd_guard.rs:
+/home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.3/src/inotify.rs:
+/home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.3/src/util.rs:
+/home/senpai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.3/src/watches.rs:
