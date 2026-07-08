@@ -182,6 +182,53 @@
 }
 
 /* ------------------------------------------------------------------ */
+/* Reader paper page-turn: a soft leading-edge shadow sweeps across in  */
+/* the turn direction, over foliate's own page slide.                  */
+/* ------------------------------------------------------------------ */
+.page-turn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 42%;
+}
+.page-turn-next::after {
+  /* faint highlight (page edge catching light) leading a soft shadow */
+  background: linear-gradient(
+    to right,
+    transparent 55%,
+    rgb(255 255 255 / 0.05) 72%,
+    rgb(0 0 0 / 0.2) 100%
+  );
+  animation: page-turn-next 300ms var(--ease-out) both;
+}
+.page-turn-prev::after {
+  background: linear-gradient(
+    to left,
+    transparent 55%,
+    rgb(255 255 255 / 0.05) 72%,
+    rgb(0 0 0 / 0.2) 100%
+  );
+  animation: page-turn-prev 300ms var(--ease-out) both;
+}
+@keyframes page-turn-next {
+  from {
+    transform: translateX(125%);
+  }
+  to {
+    transform: translateX(-130%);
+  }
+}
+@keyframes page-turn-prev {
+  from {
+    transform: translateX(-125%);
+  }
+  to {
+    transform: translateX(130%);
+  }
+}
+
+/* ------------------------------------------------------------------ */
 /* View Transitions (theme switch + screen navigation crossfade).      */
 /* Feature-detected in JS; these just tune the crossfade when present. */
 /* ------------------------------------------------------------------ */

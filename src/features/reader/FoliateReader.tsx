@@ -1,10 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import "foliate-js/view.js";
 import type { FoliateView, Relocation, TocItem } from "foliate-js/view.js";
 import { Overlayer } from "foliate-js/overlayer.js";
 import type { Annotation, Book } from "../../ipc";
 import { useSettings, type ReaderSettings } from "../../store/settings";
-import { prefersReducedMotion } from "../../lib/utils";
+import { cn, prefersReducedMotion } from "../../lib/utils";
 import { loadBookFile, metaToString } from "../library/extractMetadata";
 import { readerCSS } from "./themes";
 import { READER_FONTS } from "./fonts";
@@ -82,6 +82,21 @@ export function FoliateReader(props: Props) {
     annsRef.current = new Map(props.annotations.map((a) => [a.cfi, a]));
   });
 
+  // Paper page-turn effect: a soft leading-edge shadow sweeps across in the
+  // turn direction, synced over foliate's own page slide. `k` retriggers the
+  // CSS animation on each turn.
+  const [turn, setTurn] = useState<{ dir: "next" | "prev"; k: number } | null>(null);
+  const turnKey = useRef(0);
+  const turnTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const playTurn = useCallback((dir: "next" | "prev") => {
+    const s = settingsRef.current;
+    if (!s.pageAnimation || s.flow !== "paginated" || prefersReducedMotion()) return;
+    turnKey.current += 1;
+    setTurn({ dir, k: turnKey.current });
+    clearTimeout(turnTimer.current);
+    turnTimer.current = setTimeout(() => setTurn(null), 360);
+  }, []);
+
   // Open the book once per book id.
   useEffect(() => {
     let disposed = false;
@@ -96,6 +111,24 @@ export function FoliateReader(props: Props) {
       view.style.width = "100%";
       view.style.height = "100%";
       container.append(view);
+
+      // Every page turn (keys, click zones, wheel, goLeft/goRight) routes
+      // through next/prev, so wrapping these two plays the paper effect once,
+      // centrally, without touching each call site.
+      const nav = view as unknown as {
+        next: (d?: number) => Promise<void>;
+        prev: (d?: number) => Promise<void>;
+      };
+      const origNext = nav.next.bind(view);
+      const origPrev = nav.prev.bind(view);
+      nav.next = (d?: number) => {
+        playTurn("next");
+        return origNext(d);
+      };
+      nav.prev = (d?: number) => {
+        playTurn("prev");
+        return origPrev(d);
+      };
 
       on<Relocation>(view, "relocate", (detail) => propsRef.current.onRelocate(detail));
       on<{ doc: Document; index: number }>(view, "load", ({ doc, index }) =>
@@ -239,7 +272,7 @@ export function FoliateReader(props: Props) {
       view?.close();
       view?.remove();
     };
-  }, [props.book.id]);
+  }, [props.book.id, playTurn]);
 
   // Re-apply typography/theme when settings change.
   useEffect(() => {
@@ -261,5 +294,19 @@ export function FoliateReader(props: Props) {
     drawnRef.current = current;
   }, [props.annotations, props.viewRef]);
 
-  return <div ref={containerRef} className="h-full w-full" />;
+  return (
+    <div className="relative h-full w-full">
+      <div ref={containerRef} className="h-full w-full" />
+      {turn && (
+        <div
+          key={turn.k}
+          aria-hidden
+          className={cn(
+            "page-turn pointer-events-none absolute inset-0 overflow-hidden",
+            turn.dir === "next" ? "page-turn-next" : "page-turn-prev",
+          )}
+        />
+      )}
+    </div>
+  );
 }
