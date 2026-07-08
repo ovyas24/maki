@@ -30,7 +30,7 @@ cd src-tauri
 cargo fmt --check && cargo clippy --workspace --all-targets -- -D warnings && cargo test --workspace
 ```
 
-`cargo test -p shiori-core` works without webkit installed if you only touch
+`cargo test -p maki-core` works without webkit installed if you only touch
 the core crate.
 
 ## Ground rules

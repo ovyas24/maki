@@ -14,7 +14,7 @@ flowchart LR
     end
     subgraph Rust [Rust — src-tauri]
         CMD[commands.rs<br/>thin Tauri commands]
-        CORE[shiori-core crate]
+        CORE[maki-core crate]
         DB[(SQLite<br/>library.db)]
         FS[(book files<br/>referenced in place)]
         COV[(WebP cover cache)]
@@ -29,11 +29,11 @@ flowchart LR
 
 ## Crate layout
 
-- **`src-tauri/core` (shiori-core)** — database (schema + migrations), import
-  pipeline (format detection, SHA-256 hashing, dedup), cover caching, watch
-  folders. No Tauri dependency, so `cargo test -p shiori-core` runs anywhere
+- **`src-tauri/core` (maki-core)** — database (schema + migrations), import
+  SHA-256+pipeline with dedup, WebP cover caching, watch-folder scanning with
+  event emission. No Tauri dependency, so `cargo test -p maki-core` runs anywhere
   (no webkit needed).
-- **`src-tauri` (shiori)** — Tauri commands wrapping shiori-core, window
+- **`src-tauri` (maki)** — Tauri commands wrapping maki-core, window
   config, plugins (dialog, opener, window-state).
 
 ## Frontend layout
@@ -72,7 +72,7 @@ regenerate with `pnpm gen-types` after changing them.
 | `remove_book(id, delete_file)` | Remove from library, optionally delete file |
 | `list/add/update/delete_annotation` | Annotation CRUD |
 | `list/add/remove_watch_folder` | Watch folder CRUD (restarts watcher) |
-| `get_settings` / `save_settings` | settings.json in `$XDG_CONFIG_HOME/shiori` |
+| `get_settings` / `save_settings` | `~/.config/maki/settings.json` |
 | `save_text_file(path, contents)` | Annotation Markdown export (path from save dialog) |
 
 Events: the backend emits `library-updated` with newly imported books when the
@@ -80,7 +80,7 @@ watcher or startup scan finds files.
 
 ## Database schema
 
-SQLite at `$XDG_DATA_HOME/shiori/library.db` (WAL). Migrations are embedded in
+SQLite at `~/.local/share/maki/library.db` (WAL). Migrations are embedded in
 [`db.rs`](../src-tauri/core/src/db.rs) and run on startup;
 `PRAGMA user_version` records the applied count. Append-only — never edit a
 shipped migration.
@@ -162,7 +162,7 @@ the app was closed.
 - **`read_book_bytes` over asset-protocol file access** for book files: books
   can live anywhere on disk, and a scoped binary IPC command avoids granting
   the webview blanket filesystem read access. Covers (app-owned cache dir) do
-  use the asset protocol with a scope of `$CACHE/shiori/covers/**`.
+  use the asset protocol with a scope of `$CACHE/maki/covers/**`.
 - **Reader "pages" are foliate locations** (~1500 chars), like Calibre;
   real page-list labels are used when the EPUB provides them.
 - **Time-left estimates** scale foliate's fixed 1600 chars/min assumption by a

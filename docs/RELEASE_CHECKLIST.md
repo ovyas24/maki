@@ -2,7 +2,7 @@
 
 ## 0. Prerequisites (one-time)
 
-- [ ] Create the GitHub repo (`gh repo create ovyas24/shiori --public`) and
+- [ ] Create the GitHub repo (`gh repo create ovyas24/maki --public`) and
       push `main`.
 - [ ] Take the hero screenshot: library grid in dark mode with ~10 books and
       the Continue Reading row → `docs/screenshots/hero.png` (see the HTML
@@ -33,9 +33,9 @@
 ## 3. Publish to the AUR
 
 ```sh
-git clone ssh://aur@aur.archlinux.org/shiori.git aur-shiori
-cd aur-shiori
-cp /path/to/shiori/packaging/aur/PKGBUILD .
+git clone ssh://aur@aur.archlinux.org/maki.git aur-maki
+cd aur-maki
+cp /path/to/maki/packaging/aur/PKGBUILD .
 updpkgsums                          # real sha256 of the release tarball
 makepkg --printsrcinfo > .SRCINFO
 makepkg -si                         # full test build + install

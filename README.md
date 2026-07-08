@@ -7,9 +7,9 @@
 **A beautiful, fast ebook reader for Linux.**
 
 [![License: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-blue.svg)](LICENSE)
-[![AUR version](https://img.shields.io/aur/version/shiori)](https://aur.archlinux.org/packages/shiori)
-[![CI](https://github.com/ovyas24/shiori/actions/workflows/ci.yml/badge.svg)](https://github.com/ovyas24/shiori/actions/workflows/ci.yml)
-[![Latest release](https://img.shields.io/github/v/release/ovyas24/shiori)](https://github.com/ovyas24/shiori/releases/latest)
+[![AUR version](https://img.shields.io/aur/version/maki)](https://aur.archlinux.org/packages/maki)
+[![CI](https://github.com/ovyas24/maki/actions/workflows/ci.yml/badge.svg)](https://github.com/ovyas24/maki/actions/workflows/ci.yml)
+[![Latest release](https://img.shields.io/github/v/release/ovyas24/maki)](https://github.com/ovyas24/maki/releases/latest)
 
 <!-- SCREENSHOT: docs/screenshots/hero.png — the library grid in dark mode,
      ~10 books with real covers, the "Continue Reading" row with progress
@@ -61,19 +61,19 @@ metadata fetching, text-to-speech, OPDS — see [ROADMAP.md](ROADMAP.md).
 
 ```sh
 yay -S shiori
-```
+yay -S maki
 
-Or manually from the AUR:
+## From source
 
 ```sh
-git clone https://aur.archlinux.org/shiori.git
-cd shiori && makepkg -si
+git clone https://aur.archlinux.org/maki.git
+cd maki && makepkg -si
 ```
 
-### Other distributions
+## For developers
 
 Download the `.deb`, `.rpm`, AppImage, or binary tarball from the
-[latest release](https://github.com/ovyas24/shiori/releases/latest).
+[latest release](https://github.com/ovyas24/maki/releases/latest).
 Flatpak: coming soon.
 
 ### Build from source
@@ -86,10 +86,10 @@ sudo pacman -S --needed webkit2gtk-4.1 gtk3 base-devel rust nodejs pnpm
 # Debian/Ubuntu
 sudo apt install libwebkit2gtk-4.1-dev build-essential libssl-dev librsvg2-dev
 
-git clone https://github.com/ovyas24/shiori.git
-cd shiori
-pnpm install
-pnpm tauri build        # binary in src-tauri/target/release/shiori
+git clone https://github.com/ovyas24/maki.git
+cd maki
+
+pnpm tauri build        # binary in src-tauri/target/release/maki
 # or for development:
 pnpm tauri dev
 ```
@@ -139,8 +139,8 @@ The system WebKitGTK does the rendering, so the app is a single small binary
 backend is Rust.
 
 **Where is my data?**
-Strict XDG paths: settings in `~/.config/shiori/`, library database in
-`~/.local/share/shiori/`, cover cache in `~/.cache/shiori/`. Your book files
+Strict XDG paths: settings in `~/.config/maki/`, library database in
+`~/.local/share/maki/`, cover cache in `~/.cache/maki/`. Your book files
 stay wherever they already are — Shiori references them in place.
 
 **How does it compare to Foliate, Koodo Reader, or Calibre?**
@@ -159,7 +159,7 @@ All of these are excellent projects — Shiori shares foliate-js with Foliate
 app. If you need conversion or device management today, use Calibre.
 
 **A book renders oddly / won't open — where do I report it?**
-[Open a bug](https://github.com/ovyas24/shiori/issues/new/choose) with the
+[Open a bug](https://github.com/ovyas24/maki/issues/new/choose) with the
 format and, if shareable, the file.
 
 ## Contributing

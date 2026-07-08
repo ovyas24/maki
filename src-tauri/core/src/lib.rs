@@ -28,20 +28,20 @@ fn xdg_dir(var: &str, fallback: &str) -> PathBuf {
                 .unwrap_or_default();
             home.join(fallback)
         })
-        .join("shiori")
+        .join("maki")
 }
 
-/// `$XDG_DATA_HOME/shiori` — the library database lives here.
+/// `$XDG_DATA_HOME/maki` — the library database lives here.
 pub fn data_dir() -> PathBuf {
     xdg_dir("XDG_DATA_HOME", ".local/share")
 }
 
-/// `$XDG_CONFIG_HOME/shiori` — settings.json lives here.
+/// `$XDG_CONFIG_HOME/maki` — settings.json lives here.
 pub fn config_dir() -> PathBuf {
     xdg_dir("XDG_CONFIG_HOME", ".config")
 }
 
-/// `$XDG_CACHE_HOME/shiori` — cover thumbnails live here.
+/// `$XDG_CACHE_HOME/maki` — cover thumbnails live here.
 pub fn cache_dir() -> PathBuf {
     xdg_dir("XDG_CACHE_HOME", ".cache")
 }

@@ -44,5 +44,5 @@ pub fn run() {
             commands::save_text_file,
         ])
         .run(tauri::generate_context!())
-        .expect("error while running shiori");
+        .expect("error while running maki");
 }

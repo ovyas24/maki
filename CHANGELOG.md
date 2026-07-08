@@ -35,5 +35,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   window size/position, i18n scaffolding (English, Japanese stub).
 - Zero telemetry, zero network requests.
 
-[Unreleased]: https://github.com/ovyas24/shiori/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/ovyas24/shiori/releases/tag/v0.1.0
+[Unreleased]: https://github.com/ovyas24/maki/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/ovyas24/maki/releases/tag/v0.1.0

@@ -2,16 +2,16 @@
 members = ["core"]
 
 [package]
-name = "shiori"
+name = "maki"
 version = "0.1.0"
 description = "A beautiful, fast ebook reader for Linux"
-authors = ["Shiori contributors"]
+authors = ["Maki contributors"]
 license = "GPL-3.0-or-later"
-repository = "https://github.com/ovyas24/shiori"
+repository = "https://github.com/ovyas24/maki"
 edition = "2024"
 
 [lib]
-name = "shiori_lib"
+name = "maki_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]

@@ -40,7 +40,7 @@ pub fn start(
     })?;
     for folder in &folders {
         if let Err(e) = watcher.watch(folder, RecursiveMode::Recursive) {
-            eprintln!("shiori: cannot watch {}: {e}", folder.display());
+            eprintln!("maki: cannot watch {}: {e}", folder.display());
         }
     }
 
@@ -51,7 +51,7 @@ pub fn start(
 /// Collect event paths and import each once it has been quiet for `SETTLE`.
 fn debounce_loop(db_path: &Path, rx: &mpsc::Receiver<PathBuf>, on_import: impl Fn(Vec<Book>)) {
     let Ok(conn) = crate::db::open(db_path) else {
-        eprintln!("shiori: watcher could not open database");
+        eprintln!("maki: watcher could not open database");
         return;
     };
     let mut pending: HashMap<PathBuf, Instant> = HashMap::new();

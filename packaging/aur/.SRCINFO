@@ -1,8 +1,8 @@
-pkgbase = shiori
+pkgbase = maki
 	pkgdesc = A beautiful, fast ebook reader for Linux
 	pkgver = 0.1.0
 	pkgrel = 1
-	url = https://github.com/ovyas24/shiori
+	url = https://github.com/ovyas24/maki
 	arch = x86_64
 	license = GPL-3.0-or-later
 	makedepends = rust
@@ -16,7 +16,7 @@ pkgbase = shiori
 	depends = gdk-pixbuf2
 	depends = pango
 	depends = hicolor-icon-theme
-	source = shiori-0.1.0.tar.gz::https://github.com/ovyas24/shiori/archive/v0.1.0.tar.gz
+	source = maki-0.1.0.tar.gz::https://github.com/ovyas24/maki/archive/v0.1.0.tar.gz
 	sha256sums = SKIP
 
-pkgname = shiori
+pkgname = maki
