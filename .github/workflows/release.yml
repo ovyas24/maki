@@ -1,0 +1,63 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential curl wget file \
+            libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+      - run: pnpm install --frozen-lockfile
+
+      - name: Extract changelog for this version
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          awk -v ver="$VERSION" '
+            $0 ~ "^## \\[" ver "\\]" { on=1; next }
+            on && /^## \[/ { exit }
+            on { print }
+          ' CHANGELOG.md > /tmp/release-notes.md
+          cat /tmp/release-notes.md
+
+      - name: Build and draft release
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: "Shiori ${{ github.ref_name }}"
+          releaseBodyFile: /tmp/release-notes.md
+          releaseDraft: true
+
+      - name: Attach binary tarball
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          STAGE="shiori-$VERSION-linux-x86_64"
+          mkdir -p "/tmp/$STAGE"
+          cp src-tauri/target/release/shiori "/tmp/$STAGE/"
+          cp packaging/shiori.desktop LICENSE README.md "/tmp/$STAGE/"
+          cp -r src-tauri/icons "/tmp/$STAGE/icons"
+          tar -C /tmp -czf "/tmp/$STAGE.tar.gz" "$STAGE"
+          gh release upload "$GITHUB_REF_NAME" "/tmp/$STAGE.tar.gz" --clobber

@@ -1,0 +1,22 @@
+pkgbase = shiori
+	pkgdesc = A beautiful, fast ebook reader for Linux
+	pkgver = 0.1.0
+	pkgrel = 1
+	url = https://github.com/ovyas24/shiori
+	arch = x86_64
+	license = GPL-3.0-or-later
+	makedepends = rust
+	makedepends = nodejs
+	makedepends = pnpm
+	depends = webkit2gtk-4.1
+	depends = gtk3
+	depends = libsoup3
+	depends = glib2
+	depends = cairo
+	depends = gdk-pixbuf2
+	depends = pango
+	depends = hicolor-icon-theme
+	source = shiori-0.1.0.tar.gz::https://github.com/ovyas24/shiori/archive/v0.1.0.tar.gz
+	sha256sums = SKIP
+
+pkgname = shiori

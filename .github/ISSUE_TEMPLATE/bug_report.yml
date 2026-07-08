@@ -1,0 +1,40 @@
+name: Bug report
+description: Something isn't working
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: Also tell us what you expected to happen.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Import '...'
+        2. Open '...'
+        3. See error
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Shiori version
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: input
+    id: distro
+    attributes:
+      label: Distribution and desktop environment
+      placeholder: "Arch Linux, GNOME 47 (Wayland)"
+    validations:
+      required: true
+  - type: textarea
+    id: book
+    attributes:
+      label: Book format / file (if relevant)
+      description: Format and, if shareable, a link to a file that reproduces the issue.

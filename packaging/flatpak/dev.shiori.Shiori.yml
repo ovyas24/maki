@@ -1,0 +1,34 @@
+# Flatpak manifest stub — Flatpak support is planned, not yet shipping.
+# TODO before this can build:
+#   - Generate offline sources for pnpm (flatpak-node-generator) and cargo
+#     (flatpak-cargo-generator), since flatpak-builder builds run sandboxed
+#     without network access.
+#   - Add a metainfo.xml (AppStream) file and install it in the app module.
+#   - Verify org.webkit runtime/webkitgtk availability in the GNOME runtime
+#     version pinned below.
+#   - Submit to Flathub via github.com/flathub/flathub PR.
+app-id: dev.shiori.Shiori
+runtime: org.gnome.Platform
+runtime-version: "47"
+sdk: org.gnome.Sdk
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.rust-stable
+  - org.freedesktop.Sdk.Extension.node22
+command: shiori
+finish-args:
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --device=dri
+  # Library references books in place anywhere on disk
+  - --filesystem=home
+modules:
+  - name: shiori
+    buildsystem: simple
+    build-commands:
+      # TODO: replace with offline pnpm install + cargo build using generated
+      # source manifests, then install binary/desktop/icons as in the PKGBUILD.
+      - echo "TODO offline build" && false
+    sources:
+      - type: git
+        url: https://github.com/ovyas24/shiori.git
+        tag: v0.1.0
