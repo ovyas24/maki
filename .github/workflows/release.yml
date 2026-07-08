@@ -49,6 +49,22 @@ jobs:
             echo "prerelease=false" >> "$GITHUB_OUTPUT"
           fi
 
+      # The git tag is the single source of truth for the version. Patch every
+      # in-repo version field to match before building so the deb/rpm/AppImage
+      # and the in-app version carry the tag's version (not whatever is
+      # committed). This is CI-only — it does not commit back.
+      - name: Sync project version to tag
+        run: |
+          VERSION="${{ steps.meta.outputs.version }}"
+          pnpm version "$VERSION" --no-git-tag-version --allow-same-version
+          V="$VERSION" node -e "const f='src-tauri/tauri.conf.json';const j=require('./'+f);j.version=process.env.V;require('fs').writeFileSync(f,JSON.stringify(j,null,2)+'\n')"
+          for f in src-tauri/Cargo.toml src-tauri/core/Cargo.toml; do
+            sed -i '0,/^version = ".*"$/s//version = "'"$VERSION"'"/' "$f"
+          done
+          echo "Synced to $VERSION:"
+          grep -m1 '"version"' package.json src-tauri/tauri.conf.json
+          grep -m1 '^version' src-tauri/Cargo.toml src-tauri/core/Cargo.toml
+
       - name: Extract changelog for this version
         run: |
           awk -v ver="${{ steps.meta.outputs.version }}" '
@@ -56,6 +72,10 @@ jobs:
             on && /^## \[/ { exit }
             on { print }
           ' CHANGELOG.md > "${RUNNER_TEMP}/release-notes.md"
+          # Fall back to a minimal body if there is no matching changelog section
+          # so the release notes are never empty.
+          [ -s "${RUNNER_TEMP}/release-notes.md" ] || \
+            echo "Maki ${GITHUB_REF_NAME}" > "${RUNNER_TEMP}/release-notes.md"
           echo "----- release notes -----"
           cat "${RUNNER_TEMP}/release-notes.md"
 
