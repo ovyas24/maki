@@ -32,7 +32,7 @@
   "bundle": {
     "active": true,
     "targets": ["deb", "rpm", "appimage"],
-    "category": "Office",
+    "category": "Reference",
     "shortDescription": "A beautiful, fast ebook reader for Linux",
     "longDescription": "Shiori is a modern ebook reader for Linux supporting EPUB, MOBI, AZW3, FB2, CBZ and PDF, with annotations, reading progress, and a carefully designed reading experience.",
     "icon": [
