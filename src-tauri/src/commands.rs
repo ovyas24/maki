@@ -1,4 +1,4 @@
-use rusqlite::Connection;
+use shiori_core::Connection;
 use shiori_core::models::{Annotation, Book, ImportResult, NewAnnotation, WatchFolder};
 use shiori_core::watch::WatchHandle;
 use shiori_core::{covers, library};
@@ -114,11 +114,7 @@ pub async fn set_finished(state: State<'_, AppState>, id: i64, finished: bool) -
 }
 
 #[tauri::command]
-pub async fn remove_book(
-    state: State<'_, AppState>,
-    id: i64,
-    delete_file: bool,
-) -> CmdResult<()> {
+pub async fn remove_book(state: State<'_, AppState>, id: i64, delete_file: bool) -> CmdResult<()> {
     let conn = state.conn.lock().unwrap();
     library::remove_book(&conn, id, delete_file).map_err(err)
 }

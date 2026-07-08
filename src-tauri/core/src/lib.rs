@@ -12,6 +12,10 @@ pub mod watch;
 
 pub use error::{Error, Result};
 
+/// Re-exported so the Tauri app crate can hold a `Connection` in its app state
+/// without depending on rusqlite directly (avoids a duplicate-crate version skew).
+pub use rusqlite::Connection;
+
 use std::path::PathBuf;
 
 fn xdg_dir(var: &str, fallback: &str) -> PathBuf {

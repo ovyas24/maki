@@ -25,3 +25,7 @@ dist-ssr
 
 # Hermes agent working files
 .hermes/
+
+# ts-rs default export dir (cargo test writes here without TS_RS_EXPORT_DIR;
+# the canonical bindings live in src/bindings/, generated via `pnpm gen-types`)
+src-tauri/core/bindings/
