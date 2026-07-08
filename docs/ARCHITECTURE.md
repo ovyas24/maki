@@ -125,9 +125,9 @@ erDiagram
 
 | What | Where |
 | --- | --- |
-| Settings | `$XDG_CONFIG_HOME/shiori/settings.json` |
-| Library DB | `$XDG_DATA_HOME/shiori/library.db` |
-| Cover cache | `$XDG_CACHE_HOME/shiori/covers/<book-id>.webp` |
+| Settings | `$XDG_CONFIG_HOME/maki/settings.json` |
+| Library DB | `$XDG_DATA_HOME/maki/library.db` |
+| Cover cache | `$XDG_CACHE_HOME/maki/covers/<book-id>.webp` |
 
 Book files are **never copied**; the library stores their absolute path and a
 content hash. Missing files are flagged in the UI, not silently removed.

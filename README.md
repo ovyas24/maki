@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="src-tauri/icons/256x256.png" width="96" alt="Shiori logo" />
+<img src="src-tauri/icons/256x256.png" width="96" alt="Maki logo" />
 
-# Shiori 栞
+# Maki
 
 **A beautiful, fast ebook reader for Linux.**
 
@@ -14,11 +14,11 @@
 <!-- SCREENSHOT: docs/screenshots/hero.png — the library grid in dark mode,
      ~10 books with real covers, the "Continue Reading" row with progress
      rings visible at the top, window ~1280×800. -->
-<img src="docs/screenshots/hero.png" alt="Shiori library in dark mode" width="800" />
+<img src="docs/screenshots/hero.png" alt="Maki library in dark mode" width="800" />
 
 </div>
 
-Shiori (栞, Japanese for *bookmark*) brings an Apple Books-quality reading
+Maki (巻, Japanese for *book/scroll*) brings an Apple Books-quality reading
 experience to the Linux desktop: real covers everywhere, careful typography,
 smooth and quiet interactions — and no cloud attached.
 
@@ -30,7 +30,7 @@ smooth and quiet interactions — and no cloud attached.
   recently opened, recently added, title, author, or progress
 - A "Continue Reading" row with your 4 most recent books and progress rings
 - Import by file picker or drag-and-drop; watch folders auto-import new files
-- Books are referenced **in place** — Shiori never copies or moves your files,
+- Books are referenced **in place** — Maki never copies or moves your files,
   and flags books whose files went missing instead of losing them
 
 **Reading**
@@ -60,7 +60,6 @@ metadata fetching, text-to-speech, OPDS — see [ROADMAP.md](ROADMAP.md).
 ### Arch Linux
 
 ```sh
-yay -S shiori
 yay -S maki
 
 ## From source
@@ -123,7 +122,7 @@ Press `?` in the app for this list.
 
 ## Privacy
 
-Shiori makes **zero network requests**. No telemetry, no update pings, no
+Maki makes **zero network requests**. No telemetry, no update pings, no
 metadata lookups — nothing leaves your machine. Future online features
 (metadata fetch, dictionaries, OPDS) will always be explicit, user-initiated
 actions, clearly labeled.
@@ -131,7 +130,7 @@ actions, clearly labeled.
 ## FAQ
 
 **Does it work on Wayland?**
-Yes. Shiori is a native GTK/WebKitGTK app and runs on Wayland and X11.
+Yes. Maki is a native GTK/WebKitGTK app and runs on Wayland and X11.
 
 **Why Tauri and not Electron?**
 The system WebKitGTK does the rendering, so the app is a single small binary
@@ -141,11 +140,11 @@ backend is Rust.
 **Where is my data?**
 Strict XDG paths: settings in `~/.config/maki/`, library database in
 `~/.local/share/maki/`, cover cache in `~/.cache/maki/`. Your book files
-stay wherever they already are — Shiori references them in place.
+stay wherever they already are — Maki references them in place.
 
 **How does it compare to Foliate, Koodo Reader, or Calibre?**
 
-| | Shiori | Foliate | Koodo Reader | Calibre |
+| | Maki | Foliate | Koodo Reader | Calibre |
 | --- | --- | --- | --- | --- |
 | Stack | Tauri (Rust + WebKitGTK) | GTK4 + WebKitGTK | Electron | Qt |
 | Library management | ✔ covers, search, watch folders | minimal | ✔ | ✔✔ the gold standard |
@@ -154,7 +153,7 @@ stay wherever they already are — Shiori references them in place.
 | PDF | ✔ | ✖ | ✔ | ✔ |
 | Copies your files into its own folder | ✖ never | ✖ | ✔ (workspace) | ✔ (library dir) |
 
-All of these are excellent projects — Shiori shares foliate-js with Foliate
+All of these are excellent projects — Maki shares foliate-js with Foliate
 (thanks!) and aims at a different niche: a designed, library-first reading
 app. If you need conversion or device management today, use Calibre.
 
@@ -171,7 +170,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) and
 
 GPL-3.0-or-later — see [LICENSE](LICENSE).
 
-Shiori stands on:
+Maki stands on:
 
 - [foliate-js](https://github.com/johnfactotum/foliate-js) (MIT) — the book
   rendering engine, by John Factotum

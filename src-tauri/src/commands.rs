@@ -224,7 +224,7 @@ pub fn rescan_and_watch(app: &AppHandle) {
         match library::list_watch_folders(&conn) {
             Ok(list) => list.into_iter().map(|f| PathBuf::from(f.path)).collect(),
             Err(e) => {
-                eprintln!("shiori: cannot list watch folders: {e}");
+                eprintln!("maki: cannot list watch folders: {e}");
                 return;
             }
         }
@@ -258,7 +258,7 @@ pub fn rescan_and_watch(app: &AppHandle) {
         shiori_core::watch::start(state.db_path.clone(), folders, move |books| {
             let _ = event_app.emit("library-updated", &books);
         })
-        .map_err(|e| eprintln!("shiori: watcher failed to start: {e}"))
+        .map_err(|e| eprintln!("maki: watcher failed to start: {e}"))
         .ok()
     };
     *state.watcher.lock().unwrap() = handle;
