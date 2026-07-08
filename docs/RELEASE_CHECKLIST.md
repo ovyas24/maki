@@ -32,6 +32,16 @@
 
 ## 3. Publish to the AUR
 
+Only after the GitHub release exists (the PKGBUILD's `source=` downloads the
+release tarball). The helper automates clone → checksum → .SRCINFO → test
+build → push:
+
+```sh
+packaging/aur/publish.sh 0.1.0
+```
+
+Or manually:
+
 ```sh
 git clone ssh://aur@aur.archlinux.org/maki.git aur-maki
 cd aur-maki

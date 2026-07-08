@@ -1,16 +1,22 @@
 # Maintainer: Maki contributors <https://github.com/ovyas24/maki>
 #
-# Publishing to the AUR (one-time setup + per release):
-#   1. Create an AUR account at https://aur.archlinux.org and add your SSH key
-#      (Account → SSH Public Key).
-#   2. git clone ssh://aur@aur.archlinux.org/maki.git aur-maki
-#   3. Copy this PKGBUILD into it, bump pkgver, then:
-#        updpkgsums                      # fills in real sha256sums
-#        makepkg --printsrcinfo > .SRCINFO
-#        makepkg -si                     # test build + install locally
-#        namcap PKGBUILD maki-*.pkg.tar.zst   # lint before pushing
-#   4. git add PKGBUILD .SRCINFO && git commit -m "v$pkgver" && git push
-#      (pushing to aur.archlinux.org publishes immediately)
+# Publishing to the AUR:
+#   Easiest — run the helper (after the GitHub release for the version exists):
+#       packaging/aur/publish.sh 0.1.0
+#   It clones the AUR repo, fills sha256sums, regenerates .SRCINFO, test-builds,
+#   and pushes.
+#
+#   One-time prerequisite: an AUR account with your SSH public key added
+#   (https://aur.archlinux.org → My Account → SSH Public Key).
+#
+#   Manual equivalent:
+#     git clone ssh://aur@aur.archlinux.org/maki.git aur-maki && cd aur-maki
+#     cp /path/to/maki/packaging/aur/PKGBUILD .
+#     updpkgsums                        # fills in real sha256sums
+#     makepkg --printsrcinfo > .SRCINFO
+#     makepkg -si                       # test build + install locally
+#     namcap PKGBUILD maki-*.pkg.tar.zst
+#     git add PKGBUILD .SRCINFO && git commit -m "v$pkgver" && git push
 
 pkgname=maki
 pkgver=0.1.0
