@@ -2129,14 +2129,29 @@ checksum = "0ceec5bc11778974d1bcb055b18002eba7f4b3518b6a0081b3af5f21666da9ad"
 name = "maki"
 version = "0.1.0"
 dependencies = [
+ "maki-core",
  "serde",
  "serde_json",
- "shiori-core",
  "tauri",
  "tauri-build",
  "tauri-plugin-dialog",
  "tauri-plugin-opener",
  "tauri-plugin-window-state",
+]
+
+[[package]]
+name = "maki-core"
+version = "0.1.0"
+dependencies = [
+ "image",
+ "notify",
+ "rusqlite",
+ "serde",
+ "serde_json",
+ "sha2 0.11.0",
+ "tempfile",
+ "thiserror 2.0.18",
+ "ts-rs",
 ]
 
 [[package]]
@@ -3326,21 +3341,6 @@ dependencies = [
  "cfg-if",
  "cpufeatures 0.3.0",
  "digest 0.11.3",
-]
-
-[[package]]
-name = "shiori-core"
-version = "0.1.0"
-dependencies = [
- "image",
- "notify",
- "rusqlite",
- "serde",
- "serde_json",
- "sha2 0.11.0",
- "tempfile",
- "thiserror 2.0.18",
- "ts-rs",
 ]
 
 [[package]]

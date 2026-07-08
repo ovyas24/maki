@@ -1,4 +1,4 @@
-# Contributing to Shiori
+# Contributing to Maki
 
 Thanks for helping! Issues and PRs are welcome.
 

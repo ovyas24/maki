@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "Shiori",
+        "title": "Maki",
         "width": 1200,
         "height": 800,
         "minWidth": 720,
@@ -34,7 +34,7 @@
     "targets": ["deb", "rpm", "appimage"],
     "category": "Reference",
     "shortDescription": "A beautiful, fast ebook reader for Linux",
-    "longDescription": "Shiori is a modern ebook reader for Linux supporting EPUB, MOBI, AZW3, FB2, CBZ and PDF, with annotations, reading progress, and a carefully designed reading experience.",
+    "longDescription": "Maki is a modern ebook reader for Linux supporting EPUB, MOBI, AZW3, FB2, CBZ and PDF, with annotations, reading progress, and a carefully designed reading experience.",
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",

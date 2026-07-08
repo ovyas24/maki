@@ -53,19 +53,19 @@ git push                            # this publishes the package
 Post after the AUR package is installable. Lead with the screenshot.
 
 - [ ] **r/archlinux** — flair "Share", title like:
-      *"Shiori — a new ebook reader for Linux (Tauri, EPUB/MOBI/PDF), now in
+      *"Maki — a new ebook reader for Linux (Tauri, EPUB/MOBI/PDF), now in
       the AUR"*. Mention: no Electron, zero network calls, books referenced
       in place. Link repo + AUR.
 - [ ] **r/linux** — same post, slightly less Arch-specific; note deb/rpm/
       AppImage on the releases page.
 - [ ] **Hacker News — Show HN template:**
 
-  > **Title:** Show HN: Shiori – A fast, beautiful ebook reader for Linux
+  > **Title:** Show HN: Maki – A fast, beautiful ebook reader for Linux
   >
-  > **URL:** https://github.com/ovyas24/shiori
+  > **URL:** https://github.com/ovyas24/maki
   >
   > **First comment:**
-  > I built Shiori because Linux never quite got an Apple Books-style
+  > I built Maki because Linux never quite got an Apple Books-style
   > reader: real covers, careful typography, and a library that doesn't
   > take over your files.
   >

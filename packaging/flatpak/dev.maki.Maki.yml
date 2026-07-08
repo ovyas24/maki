@@ -7,14 +7,14 @@
 #   - Verify org.webkit runtime/webkitgtk availability in the GNOME runtime
 #     version pinned below.
 #   - Submit to Flathub via github.com/flathub/flathub PR.
-app-id: dev.shiori.Shiori
+app-id: dev.maki.Maki
 runtime: org.gnome.Platform
 runtime-version: "47"
 sdk: org.gnome.Sdk
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.rust-stable
   - org.freedesktop.Sdk.Extension.node22
-command: shiori
+command: maki
 finish-args:
   - --socket=wayland
   - --socket=fallback-x11
@@ -22,7 +22,7 @@ finish-args:
   # Library references books in place anywhere on disk
   - --filesystem=home
 modules:
-  - name: shiori
+  - name: maki
     buildsystem: simple
     build-commands:
       # TODO: replace with offline pnpm install + cargo build using generated
@@ -30,5 +30,5 @@ modules:
       - echo "TODO offline build" && false
     sources:
       - type: git
-        url: https://github.com/ovyas24/shiori.git
+        url: https://github.com/ovyas24/maki.git
         tag: v0.1.0

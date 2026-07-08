@@ -1,6 +1,6 @@
 # Architecture
 
-Shiori is a Tauri 2 app: a Rust backend owning all filesystem/database work,
+Maki is a Tauri 2 app: a Rust backend owning all filesystem/database work,
 and a React webview owning rendering and UI.
 
 ```mermaid

@@ -1,4 +1,4 @@
-//! shiori-core: everything that doesn't need a webview.
+//! maki-core: everything that doesn't need a webview.
 //! Owns the SQLite library database, file import/hashing, cover caching,
 //! and watch-folder scanning. The Tauri app crate is a thin command layer
 //! over this so all logic is testable without webkit.

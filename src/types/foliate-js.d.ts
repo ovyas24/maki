@@ -1,4 +1,4 @@
-// Minimal typings for the parts of foliate-js Shiori uses.
+// Minimal typings for the parts of foliate-js Maki uses.
 declare module "foliate-js/view.js" {
   export interface TocItem {
     label: string;

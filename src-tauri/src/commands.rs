@@ -1,7 +1,7 @@
-use shiori_core::Connection;
-use shiori_core::models::{Annotation, Book, ImportResult, NewAnnotation, WatchFolder};
-use shiori_core::watch::WatchHandle;
-use shiori_core::{covers, library};
+use maki_core::Connection;
+use maki_core::models::{Annotation, Book, ImportResult, NewAnnotation, WatchFolder};
+use maki_core::watch::WatchHandle;
+use maki_core::{covers, library};
 use std::path::{Path, PathBuf};
 use std::sync::Mutex;
 use tauri::{AppHandle, Emitter, Manager, State};
@@ -255,7 +255,7 @@ pub fn rescan_and_watch(app: &AppHandle) {
     let handle = if folders.is_empty() {
         None
     } else {
-        shiori_core::watch::start(state.db_path.clone(), folders, move |books| {
+        maki_core::watch::start(state.db_path.clone(), folders, move |books| {
             let _ = event_app.emit("library-updated", &books);
         })
         .map_err(|e| eprintln!("maki: watcher failed to start: {e}"))

@@ -1,25 +1,34 @@
 name: Release
 
+# Push a tag like `v0.1.0` to cut a release. The job builds the deb, rpm, and
+# AppImage bundles plus a portable binary tarball and attaches them all to a
+# GitHub Release created from the tag, using the matching CHANGELOG section as
+# the release notes. Tags with a suffix (e.g. `v0.2.0-rc1`) are marked as
+# pre-releases.
+
 on:
   push:
     tags: ["v*"]
 
+permissions:
+  contents: write
+
 jobs:
   release:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v4
+
       - name: Install system dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential curl wget file \
             libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev
-      - uses: pnpm/action-setup@v6
+
+      - uses: pnpm/action-setup@v4
         with:
           version: 11
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: pnpm
@@ -29,35 +38,55 @@ jobs:
           workspaces: src-tauri
       - run: pnpm install --frozen-lockfile
 
-      - name: Extract changelog for this version
+      - name: Derive version and pre-release flag
+        id: meta
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
-          awk -v ver="$VERSION" '
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          if [[ "$VERSION" == *-* ]]; then
+            echo "prerelease=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "prerelease=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Extract changelog for this version
+        run: |
+          awk -v ver="${{ steps.meta.outputs.version }}" '
             $0 ~ "^## \\[" ver "\\]" { on=1; next }
             on && /^## \[/ { exit }
             on { print }
-          ' CHANGELOG.md > /tmp/release-notes.md
-          cat /tmp/release-notes.md
+          ' CHANGELOG.md > "${RUNNER_TEMP}/release-notes.md"
+          echo "----- release notes -----"
+          cat "${RUNNER_TEMP}/release-notes.md"
 
-      - name: Build and draft release
+      # Builds the frontend + release binary, bundles deb/rpm/appimage (from
+      # tauri.conf.json), creates the GitHub Release for this tag, and uploads
+      # every bundle to it automatically.
+      - name: Build bundles and publish release
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tagName: ${{ github.ref_name }}
-          releaseName: "Shiori ${{ github.ref_name }}"
-          releaseBodyFile: /tmp/release-notes.md
-          releaseDraft: true
+          releaseName: "Maki ${{ github.ref_name }}"
+          releaseBodyFile: ${{ runner.temp }}/release-notes.md
+          releaseDraft: false
+          prerelease: ${{ steps.meta.outputs.prerelease }}
 
-      - name: Attach binary tarball
+      - name: Stage portable binary tarball
+        run: |
+          VERSION="${{ steps.meta.outputs.version }}"
+          STAGE="maki-${VERSION}-linux-x86_64"
+          mkdir -p "${RUNNER_TEMP}/${STAGE}"
+          cp src-tauri/target/release/maki "${RUNNER_TEMP}/${STAGE}/"
+          cp packaging/maki.desktop LICENSE README.md "${RUNNER_TEMP}/${STAGE}/"
+          cp -r src-tauri/icons "${RUNNER_TEMP}/${STAGE}/icons"
+          tar -C "${RUNNER_TEMP}" -czf "${RUNNER_TEMP}/${STAGE}.tar.gz" "${STAGE}"
+
+      - name: Attach tarball to release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          VERSION="${GITHUB_REF_NAME#v}"
-          STAGE="shiori-$VERSION-linux-x86_64"
-          mkdir -p "/tmp/$STAGE"
-          cp src-tauri/target/release/shiori "/tmp/$STAGE/"
-          cp packaging/shiori.desktop LICENSE README.md "/tmp/$STAGE/"
-          cp -r src-tauri/icons "/tmp/$STAGE/icons"
-          tar -C /tmp -czf "/tmp/$STAGE.tar.gz" "$STAGE"
-          gh release upload "$GITHUB_REF_NAME" "/tmp/$STAGE.tar.gz" --clobber
+          gh release upload "${GITHUB_REF_NAME}" \
+            "${RUNNER_TEMP}/maki-${{ steps.meta.outputs.version }}-linux-x86_64.tar.gz" \
+            --clobber

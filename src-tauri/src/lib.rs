@@ -10,13 +10,13 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_window_state::Builder::default().build())
         .setup(|app| {
-            let db_path = shiori_core::data_dir().join("library.db");
-            let conn = shiori_core::db::open(&db_path)?;
+            let db_path = maki_core::data_dir().join("library.db");
+            let conn = maki_core::db::open(&db_path)?;
             app.manage(AppState {
                 conn: Mutex::new(conn),
                 db_path,
-                cache_dir: shiori_core::cache_dir(),
-                config_dir: shiori_core::config_dir(),
+                cache_dir: maki_core::cache_dir(),
+                config_dir: maki_core::config_dir(),
                 watcher: Mutex::new(None),
             });
             commands::rescan_and_watch(app.handle());
