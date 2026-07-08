@@ -27,6 +27,12 @@ url="https://github.com/ovyas24/maki"
 license=(GPL-3.0-or-later)
 depends=(webkit2gtk-4.1 gtk3 libsoup3 glib2 cairo gdk-pixbuf2 pango hicolor-icon-theme)
 makedepends=(rust nodejs pnpm)
+# Cargo does its own LTO (see [profile.release] in Cargo.toml). Disable makepkg's
+# C-level LTO: it injects -flto into CFLAGS, so the cc crate compiles rusqlite's
+# bundled sqlite3.c to GCC LTO bitcode that rust's lld linker can't resolve
+# (undefined sqlite3_* symbols). Required when makepkg.conf enables the `lto`
+# option (default on e.g. CachyOS).
+options=(!lto)
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
 sha256sums=('SKIP') # run `updpkgsums` after each release tag
 
