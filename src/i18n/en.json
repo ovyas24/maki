@@ -1,0 +1,151 @@
+{
+  "app": {
+    "name": "Shiori"
+  },
+  "titlebar": {
+    "minimize": "Minimize",
+    "maximize": "Maximize",
+    "close": "Close"
+  },
+  "nav": {
+    "library": "Library",
+    "settings": "Settings",
+    "collapse": "Collapse sidebar"
+  },
+  "library": {
+    "title": "Library",
+    "continueReading": "Continue Reading",
+    "searchPlaceholder": "Search by title or author…",
+    "import": "Import Books",
+    "empty": {
+      "title": "Your library is empty",
+      "body": "Drop EPUB, MOBI, AZW3, FB2, CBZ or PDF files anywhere in this window, or click below to pick files.",
+      "action": "Import books"
+    },
+    "noResults": "Nothing matches “{{query}}”",
+    "sort": {
+      "label": "Sort",
+      "recentlyOpened": "Recently opened",
+      "recentlyAdded": "Recently added",
+      "title": "Title",
+      "author": "Author",
+      "progress": "Progress"
+    },
+    "view": {
+      "grid": "Grid view",
+      "list": "List view"
+    },
+    "columns": {
+      "title": "Title",
+      "author": "Author",
+      "progress": "Progress",
+      "lastOpened": "Last opened"
+    },
+    "never": "Never",
+    "unknownAuthor": "Unknown author",
+    "missingFile": "File is missing — it may have been moved or deleted",
+    "imported_one": "Imported {{count}} book",
+    "imported_other": "Imported {{count}} books",
+    "finished": "Finished",
+    "remove": {
+      "title": "Remove “{{title}}”?",
+      "body": "The book will be removed from your library along with its highlights and notes.",
+      "keepFile": "Remove, keep the file",
+      "deleteFile": "Also delete the file from disk",
+      "cancel": "Cancel"
+    }
+  },
+  "reader": {
+    "backToLibrary": "Back to library",
+    "contents": "Contents",
+    "annotations": "Annotations",
+    "typography": "Typography",
+    "fullscreen": "Toggle fullscreen",
+    "pageOf": "Page {{current}} of {{total}}",
+    "percent": "{{percent}}%",
+    "timeLeftChapter": "{{minutes}} min left in chapter",
+    "loadError": "Could not open this book",
+    "font": "Font",
+    "fontSerif": "Serif",
+    "fontSans": "Sans",
+    "fontMono": "Mono",
+    "fontSystem": "System",
+    "fontSize": "Size",
+    "lineHeight": "Line spacing",
+    "margins": "Margins",
+    "justify": "Justify text",
+    "hyphenate": "Hyphenation",
+    "layout": "Layout",
+    "paginated": "Pages",
+    "scrolled": "Scroll",
+    "theme": "Theme",
+    "themes": {
+      "light": "Light",
+      "sepia": "Sepia",
+      "gray": "Gray",
+      "dark": "Dark",
+      "black": "Black"
+    }
+  },
+  "annotations": {
+    "highlight": "Highlight",
+    "underline": "Underline",
+    "note": "Note",
+    "copy": "Copy",
+    "copied": "Copied",
+    "delete": "Delete",
+    "addNote": "Add a note…",
+    "save": "Save",
+    "cancel": "Cancel",
+    "empty": "No highlights yet. Select some text in the book to get started.",
+    "export": "Export as Markdown",
+    "colors": {
+      "yellow": "Yellow",
+      "green": "Green",
+      "blue": "Blue",
+      "pink": "Pink"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "appearance": "Appearance",
+    "appTheme": "App theme",
+    "themeSystem": "System",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "accent": "Accent color",
+    "library": "Library",
+    "watchFolders": "Watch folders",
+    "watchFoldersHint": "Books added to these folders are imported automatically.",
+    "addFolder": "Add folder…",
+    "removeFolder": "Remove",
+    "noWatchFolders": "No watch folders configured.",
+    "about": "About",
+    "aboutBody": "Shiori (栞) — a beautiful, fast ebook reader for Linux.",
+    "privacy": "Shiori never connects to the network. Your library never leaves your machine.",
+    "shortcuts": "Keyboard shortcuts"
+  },
+  "shortcuts": {
+    "title": "Keyboard Shortcuts",
+    "close": "Close",
+    "library": "Library",
+    "reader": "Reader",
+    "search": "Search library",
+    "importBooks": "Import books",
+    "toggleView": "Toggle grid/list view",
+    "nextPage": "Next page",
+    "prevPage": "Previous page",
+    "toggleToc": "Table of contents",
+    "toggleAnnotations": "Annotations sidebar",
+    "toggleTypography": "Typography panel",
+    "backToLibrary": "Back to library",
+    "fullscreen": "Distraction-free mode",
+    "showHelp": "Show this overlay"
+  },
+  "common": {
+    "loading": "Loading…",
+    "error": "Something went wrong",
+    "undo": "Undo",
+    "ok": "OK"
+  }
+}

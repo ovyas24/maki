@@ -4,20 +4,34 @@
  * A book in the library. Files are referenced in place, never copied;
  * `missing` is set when the file can no longer be found at `path`.
  */
-export type Book = { id: number, path: string, contentHash: string, 
-/**
- * One of: epub, mobi, azw3, fb2, fbz, cbz, pdf
- */
-format: string, title: string, author: string | null, language: string | null, description: string | null, coverPath: string | null, fileSize: number, addedAt: number, lastOpenedAt: number | null, 
-/**
- * 0..1 fraction of the book read.
- */
-progress: number, 
-/**
- * Opaque reader location (CFI for foliate-js books).
- */
-location: string | null, finished: boolean, missing: boolean, 
-/**
- * False until the webview has extracted title/author/cover via foliate-js.
- */
-metadataExtracted: boolean, };
+export type Book = {
+  id: number;
+  path: string;
+  contentHash: string;
+  /**
+   * One of: epub, mobi, azw3, fb2, fbz, cbz, pdf
+   */
+  format: string;
+  title: string;
+  author: string | null;
+  language: string | null;
+  description: string | null;
+  coverPath: string | null;
+  fileSize: number;
+  addedAt: number;
+  lastOpenedAt: number | null;
+  /**
+   * 0..1 fraction of the book read.
+   */
+  progress: number;
+  /**
+   * Opaque reader location (CFI for foliate-js books).
+   */
+  location: string | null;
+  finished: boolean;
+  missing: boolean;
+  /**
+   * False until the webview has extracted title/author/cover via foliate-js.
+   */
+  metadataExtracted: boolean;
+};

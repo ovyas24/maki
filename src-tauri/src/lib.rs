@@ -41,6 +41,7 @@ pub fn run() {
             commands::remove_watch_folder,
             commands::get_settings,
             commands::save_settings,
+            commands::save_text_file,
         ])
         .run(tauri::generate_context!())
         .expect("error while running shiori");

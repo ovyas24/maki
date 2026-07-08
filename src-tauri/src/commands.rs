@@ -212,6 +212,13 @@ pub async fn save_settings(
     std::fs::write(&path, serde_json::to_string_pretty(&settings).map_err(err)?).map_err(err)
 }
 
+/// Write a text file to a user-chosen destination (annotation export; the
+/// path always comes from a native save dialog).
+#[tauri::command]
+pub async fn save_text_file(path: String, contents: String) -> CmdResult<()> {
+    std::fs::write(&path, contents).map_err(err)
+}
+
 /// Scan all watch folders for files added while the app was closed, then
 /// (re)start the live watcher. Emits `library-updated` when anything lands.
 pub fn rescan_and_watch(app: &AppHandle) {

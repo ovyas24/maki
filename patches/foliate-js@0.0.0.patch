@@ -1,0 +1,10 @@
+diff --git a/pdf.js b/pdf.js
+index c998bf49ea5b62f74cd78ae0e991de373a7902f4..2a5455db26a289b8a1916b4aeb6875d049e99aee 100644
+--- a/pdf.js
++++ b/pdf.js
+@@ -1,4 +1,4 @@
+-const pdfjsPath = path => new URL(`vendor/pdfjs/${path}`, import.meta.url).toString()
++const pdfjsPath = path => new URL(`./vendor/pdfjs/${path}`, import.meta.url).toString()
+ 
+ import './vendor/pdfjs/pdf.mjs'
+ const pdfjsLib = globalThis.pdfjsLib

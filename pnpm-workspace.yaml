@@ -1,2 +1,4 @@
 allowBuilds:
   esbuild: true
+patchedDependencies:
+  foliate-js@0.0.0: patches/foliate-js@0.0.0.patch
