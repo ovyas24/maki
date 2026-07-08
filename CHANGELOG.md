@@ -7,34 +7,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-
-- Full-text search (SQLite FTS5) across book titles, authors, and annotation
-  text — the library search box now finds books by what you highlighted, not
-  just their metadata.
-
-### Changed
-
-- Reader page turns now use a "paper slide": a soft leading-edge shadow sweeps
-  across in the turn direction over the page motion, instead of a flat slide.
-
 ## [0.2.0] - 2026-07-08
 
 ### Added
 
 - Animated launch screen on cold start (Maki ribbon mark), fading into the
   library once loaded.
-- Page-turn animation in the reader — an eased horizontal slide for paginated
-  mode, toggleable in the typography panel.
+- Reader page-turn animation with a "paper slide" — a soft leading-edge shadow
+  sweeps across in the turn direction over the page motion; toggleable in the
+  typography panel.
 - Crossfade transitions when switching app theme and navigating between the
   library, reader, and settings (via the View Transitions API where the
   engine supports it).
 - Staggered entrance animation for library grid covers.
+- Full-text search (SQLite FTS5) across book titles, authors, and annotation
+  text — the library search box now finds books by what you highlighted, not
+  just their metadata.
 
 ### Changed
 
 - All motion respects `prefers-reduced-motion`: animations collapse to instant
   when the system requests reduced motion.
+
+## [0.1.1] - 2026-07-08
+
+### Changed
+
+- Project renamed to **Maki** (the `shiori` name was already taken by another
+  ebook reader). New identifier `dev.maki.Maki`; data now lives under
+  `~/.config/maki`, `~/.local/share/maki`, `~/.cache/maki`.
+
+### Fixed
+
+- Release workflow derives the version from the git tag and syncs it into all
+  manifests before building, so bundle artifacts carry the tagged version.
+- AUR packaging: disable makepkg LTO to fix a rusqlite link failure; stop
+  tracking a nested Cargo `target/` directory that bloated the source tarball.
 
 ## [0.1.0] - 2026-07-08
 
@@ -66,4 +74,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [Unreleased]: https://github.com/ovyas24/maki/compare/v0.2.0...HEAD
 [0.2.0]: https://github.com/ovyas24/maki/releases/tag/v0.2.0
+[0.1.1]: https://github.com/ovyas24/maki/releases/tag/v0.1.1
 [0.1.0]: https://github.com/ovyas24/maki/releases/tag/v0.1.0
