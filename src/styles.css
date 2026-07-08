@@ -139,4 +139,66 @@
       transform: translateY(4px) scale(0.98);
     }
   }
+
+  /* Library grid: gentle staggered entrance. Delay is set per-card inline. */
+  .rise-in {
+    animation: rise-in 260ms var(--ease-out) both;
+  }
+  @keyframes rise-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Splash screen                                                       */
+/* ------------------------------------------------------------------ */
+.splash-logo {
+  animation: splash-logo 600ms var(--ease-out) both;
+  transform-origin: center;
+}
+@keyframes splash-logo {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.9);
+  }
+}
+.splash-word {
+  animation: splash-word 500ms var(--ease-out) both;
+  animation-delay: 140ms;
+}
+@keyframes splash-word {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+@keyframes splash-out {
+  to {
+    opacity: 0;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* View Transitions (theme switch + screen navigation crossfade).      */
+/* Feature-detected in JS; these just tune the crossfade when present. */
+/* ------------------------------------------------------------------ */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 220ms;
+  animation-timing-function: var(--ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+  .splash-logo,
+  .splash-word {
+    animation-duration: 0.01ms !important;
+  }
 }

@@ -118,6 +118,16 @@ export function TypographyPanel() {
           onChange={(flow) => setReader({ flow })}
         />
       </Row>
+      {reader.flow === "paginated" && (
+        <Row label={t("reader.pageAnimation")}>
+          <input
+            type="checkbox"
+            checked={reader.pageAnimation}
+            onChange={(e) => setReader({ pageAnimation: e.target.checked })}
+            className="h-4 w-4 accent-(--accent)"
+          />
+        </Row>
+      )}
       <div className="mt-2 border-t border-border pt-3">
         <div className="mb-2 text-sm text-text-muted">{t("reader.theme")}</div>
         <div className="flex gap-2">

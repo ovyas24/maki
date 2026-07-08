@@ -19,6 +19,8 @@ export interface ReaderSettings {
   hyphenate: boolean;
   theme: ReaderTheme;
   flow: Flow;
+  /** Animate page turns (eased horizontal slide) in paginated mode. */
+  pageAnimation: boolean;
 }
 
 export interface SettingsState {
@@ -45,6 +47,7 @@ export const DEFAULT_READER: ReaderSettings = {
   hyphenate: true,
   theme: "light",
   flow: "paginated",
+  pageAnimation: true,
 };
 
 const DEFAULTS = {

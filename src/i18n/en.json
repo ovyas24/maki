@@ -78,6 +78,7 @@
     "layout": "Layout",
     "paginated": "Pages",
     "scrolled": "Scroll",
+    "pageAnimation": "Animate page turns",
     "theme": "Theme",
     "themes": {
       "light": "Light",

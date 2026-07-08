@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { withViewTransition } from "../lib/utils";
 
 export type Screen =
   { name: "library" } | { name: "settings" } | { name: "reader"; bookId: number };
@@ -17,8 +18,10 @@ export const useApp = create<AppState>((set) => ({
   screen: { name: "library" },
   shortcutsOpen: false,
   sidebarCollapsed: false,
-  openBook: (bookId) => set({ screen: { name: "reader", bookId } }),
-  goTo: (screen) => set({ screen }),
+  // Wrap screen changes in a View Transition so library↔reader↔settings
+  // crossfade where the engine supports it (instant fallback otherwise).
+  openBook: (bookId) => withViewTransition(() => set({ screen: { name: "reader", bookId } })),
+  goTo: (screen) => withViewTransition(() => set({ screen })),
   setShortcutsOpen: (open) => set({ shortcutsOpen: open }),
   toggleSidebar: () => set((s) => ({ sidebarCollapsed: !s.sidebarCollapsed })),
 }));

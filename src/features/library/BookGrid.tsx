@@ -10,8 +10,13 @@ export function BookGrid({ books, onRemove }: { books: Book[]; onRemove: (book: 
   const openBook = useApp((s) => s.openBook);
   return (
     <div className="grid grid-cols-[repeat(auto-fill,minmax(148px,1fr))] gap-x-5 gap-y-7">
-      {books.map((book) => (
-        <div key={book.id} className="group relative">
+      {books.map((book, i) => (
+        <div
+          key={book.id}
+          className="rise-in group relative"
+          // Stagger the entrance across the first couple of rows, then settle.
+          style={{ animationDelay: `${Math.min(i, 12) * 25}ms` }}
+        >
           <button
             onClick={() => !book.missing && openBook(book.id)}
             className={cn("w-full text-left", book.missing && "cursor-not-allowed opacity-60")}

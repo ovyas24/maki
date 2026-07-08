@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-07-08
+
+### Added
+
+- Animated launch screen on cold start (Maki ribbon mark), fading into the
+  library once loaded.
+- Page-turn animation in the reader — an eased horizontal slide for paginated
+  mode, toggleable in the typography panel.
+- Crossfade transitions when switching app theme and navigating between the
+  library, reader, and settings (via the View Transitions API where the
+  engine supports it).
+- Staggered entrance animation for library grid covers.
+
+### Changed
+
+- All motion respects `prefers-reduced-motion`: animations collapse to instant
+  when the system requests reduced motion.
+
 ## [0.1.0] - 2026-07-08
 
 ### Added
@@ -35,5 +53,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   window size/position, i18n scaffolding (English, Japanese stub).
 - Zero telemetry, zero network requests.
 
-[Unreleased]: https://github.com/ovyas24/maki/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/ovyas24/maki/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/ovyas24/maki/releases/tag/v0.2.0
 [0.1.0]: https://github.com/ovyas24/maki/releases/tag/v0.1.0

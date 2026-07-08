@@ -2,6 +2,26 @@ export function cn(...parts: Array<string | false | null | undefined>): string {
   return parts.filter(Boolean).join(" ");
 }
 
+export function prefersReducedMotion(): boolean {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+/**
+ * Run a DOM-mutating callback inside a View Transition (crossfade) when the
+ * engine supports it and motion is allowed; otherwise apply it instantly.
+ * Feature-detected, so it's a no-op fallback on older WebKitGTK.
+ */
+export function withViewTransition(mutate: () => void): void {
+  const doc = document as Document & {
+    startViewTransition?: (cb: () => void) => { finished: Promise<void> };
+  };
+  if (doc.startViewTransition && !prefersReducedMotion()) {
+    doc.startViewTransition(mutate);
+  } else {
+    mutate();
+  }
+}
+
 /** Cover cache paths come from Rust as absolute paths; serve via asset protocol. */
 import { convertFileSrc } from "@tauri-apps/api/core";
 export function coverUrl(coverPath: string | null): string | null {

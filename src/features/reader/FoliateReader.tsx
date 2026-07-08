@@ -4,6 +4,7 @@ import type { FoliateView, Relocation, TocItem } from "foliate-js/view.js";
 import { Overlayer } from "foliate-js/overlayer.js";
 import type { Annotation, Book } from "../../ipc";
 import { useSettings, type ReaderSettings } from "../../store/settings";
+import { prefersReducedMotion } from "../../lib/utils";
 import { loadBookFile, metaToString } from "../library/extractMetadata";
 import { readerCSS } from "./themes";
 import { READER_FONTS } from "./fonts";
@@ -57,6 +58,12 @@ function applySettings(view: FoliateView, settings: ReaderSettings) {
   renderer.setAttribute("max-column-count", "2");
   renderer.setAttribute("max-inline-size", "720px");
   renderer.setAttribute("margin", "44px");
+  // foliate's paginator animates page-turn scrolls when `animated` is present.
+  if (settings.pageAnimation && settings.flow === "paginated" && !prefersReducedMotion()) {
+    renderer.setAttribute("animated", "");
+  } else {
+    renderer.removeAttribute("animated");
+  }
   renderer.setStyles?.(readerCSS(settings, READER_FONTS));
 }
 

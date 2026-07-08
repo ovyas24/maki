@@ -5,9 +5,11 @@ import { onLibraryUpdated } from "./ipc";
 import { useApp } from "./store/app";
 import { useLibrary } from "./store/library";
 import { useSettings, applyChrome } from "./store/settings";
+import { withViewTransition } from "./lib/utils";
 import { Titlebar } from "./components/Titlebar";
 import { Sidebar } from "./components/Sidebar";
 import { Icon } from "./components/Icon";
+import { SplashScreen } from "./components/SplashScreen";
 import { ShortcutsOverlay } from "./components/ShortcutsOverlay";
 import { LibraryPage, pickAndImport } from "./features/library/LibraryPage";
 import { extractPendingMetadata } from "./features/library/extractMetadata";
@@ -33,11 +35,13 @@ export default function App() {
     };
   }, []);
 
-  // Keep app chrome theme in sync (including OS theme changes).
+  // Keep app chrome theme in sync (including OS theme changes), crossfading
+  // the switch where the engine supports View Transitions.
   useEffect(() => {
-    applyChrome(settings.appTheme, settings.accent);
+    withViewTransition(() => applyChrome(settings.appTheme, settings.accent));
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    const onChange = () => applyChrome(settings.appTheme, settings.accent);
+    const onChange = () =>
+      withViewTransition(() => applyChrome(settings.appTheme, settings.accent));
     mq.addEventListener("change", onChange);
     return () => mq.removeEventListener("change", onChange);
   }, [settings.appTheme, settings.accent]);
@@ -86,8 +90,11 @@ export default function App() {
     screen.name === "reader" ? library.books.find((b) => b.id === screen.bookId) : undefined;
   const reading = currentBook !== undefined;
 
+  const booted = settings.loaded && library.loaded;
+
   return (
     <div className="flex h-full flex-col">
+      <SplashScreen done={booted} />
       {!reading && (
         <Titlebar>
           <span className="ml-2 text-sm font-semibold tracking-tight" data-tauri-drag-region>

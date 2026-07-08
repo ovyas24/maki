@@ -56,8 +56,11 @@ jobs:
       - name: Sync project version to tag
         run: |
           VERSION="${{ steps.meta.outputs.version }}"
-          pnpm version "$VERSION" --no-git-tag-version --allow-same-version
-          V="$VERSION" node -e "const f='src-tauri/tauri.conf.json';const j=require('./'+f);j.version=process.env.V;require('fs').writeFileSync(f,JSON.stringify(j,null,2)+'\n')"
+          # Patch JSON versions with node (pnpm version refuses on an unclean
+          # tree and only covers package.json anyway).
+          for f in package.json src-tauri/tauri.conf.json; do
+            V="$VERSION" JSON="$f" node -e "const f=process.env.JSON;const j=require('./'+f);j.version=process.env.V;require('fs').writeFileSync(f,JSON.stringify(j,null,2)+'\n')"
+          done
           for f in src-tauri/Cargo.toml src-tauri/core/Cargo.toml; do
             sed -i '0,/^version = ".*"$/s//version = "'"$VERSION"'"/' "$f"
           done
