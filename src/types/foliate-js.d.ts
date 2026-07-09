@@ -49,6 +49,8 @@ declare module "foliate-js/view.js" {
     /** True at the very first / last page of the book (no adjacent page). */
     readonly atStart: boolean;
     readonly atEnd: boolean;
+    /** Current scroll offset (px); used to detect end-of-book in auto-scroll. */
+    readonly start: number;
     scrollBy: (dx: number, dy: number) => void;
     prevSection: () => Promise<void>;
     nextSection: () => Promise<void>;

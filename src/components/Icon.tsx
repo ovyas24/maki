@@ -31,6 +31,13 @@ const PATHS: Record<string, string> = {
   download: "M12 3v12m0 0 4-4m-4 4-4-4M4 21h16",
   sidebar: "M3 5h18v14H3zM9 5v14",
   keyboard: "M2 6h20v12H2zM6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10",
+  sun: "M12 3v2M12 19v2M5 5l1.5 1.5M17.5 17.5L19 19M3 12h2M19 12h2M5 19l1.5-1.5M17.5 6.5L19 5M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z",
+  bookmark: "M6 4h12a1 1 0 0 1 1 1v16l-7-4-7 4V5a1 1 0 0 1 1-1Z",
+  bookmarkFilled: "M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1Z",
+  play: "M7 5l12 7-12 7V5Z",
+  pause: "M8 5v14M16 5v14",
+  chevronDoubleLeft: "m11 18-6-6 6-6M18 18l-6-6 6-6",
+  chevronDoubleRight: "m13 18 6-6-6-6M6 18l6-6-6-6",
 };
 
 export function Icon({

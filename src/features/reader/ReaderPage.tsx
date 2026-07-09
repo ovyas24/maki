@@ -14,8 +14,10 @@ import { cn, debounce } from "../../lib/utils";
 import { FoliateReader, type Rect, type SelectionInfo } from "./FoliateReader";
 import { READER_THEMES } from "./themes";
 import { SpeedTracker, scaleTimeLeft } from "./readingSpeed";
+import { useAutoScroll } from "./useAutoScroll";
 import { TocSidebar } from "./TocSidebar";
 import { TypographyPanel } from "./TypographyPanel";
+import { DisplayPopover } from "./DisplayPopover";
 import { SelectionPopover, type PopoverState } from "../annotations/SelectionPopover";
 import { AnnotationsSidebar } from "../annotations/AnnotationsSidebar";
 
@@ -34,11 +36,18 @@ export function ReaderPage({ book }: { book: Book }) {
   const [relocation, setRelocation] = useState<Relocation | null>(null);
   const [panel, setPanel] = useState<Panel>(null);
   const [typographyOpen, setTypographyOpen] = useState(false);
+  const [displayOpen, setDisplayOpen] = useState(false);
   const [popover, setPopover] = useState<PopoverState | null>(null);
   const [annotations, setAnnotations] = useState<Annotation[]>([]);
   const [fullscreen, setFullscreen] = useState(false);
+  const [autoScroll, setAutoScroll] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
+
+  // Auto-scroll only runs in continuous mode; the toggle button is likewise
+  // shown only there, so gating the hook is enough (no reset effect needed).
+  const scrolled = settings.reader.flow === "scrolled";
+  useAutoScroll(viewRef, autoScroll && scrolled, settings.reader.autoScrollSpeed);
 
   const speedRef = useRef(new SpeedTracker());
 
@@ -152,6 +161,13 @@ export function ReaderPage({ book }: { book: Book }) {
     const onKey = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
       const view = viewRef.current;
+      // Any manual navigation stops auto-scroll.
+      if (
+        ["ArrowLeft", "ArrowRight", "PageUp", "PageDown", " ", "[", "]", "Home", "End"].includes(
+          e.key,
+        )
+      )
+        setAutoScroll(false);
       switch (e.key) {
         case "ArrowLeft":
           void view?.goLeft();
@@ -195,16 +211,17 @@ export function ReaderPage({ book }: { book: Book }) {
         case "Escape":
           if (fullscreen) toggleFullscreen();
           else if (popover) setPopover(null);
-          else if (panel || typographyOpen) {
+          else if (panel || typographyOpen || displayOpen) {
             setPanel(null);
             setTypographyOpen(false);
+            setDisplayOpen(false);
           } else goTo({ name: "library" });
           break;
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [fullscreen, popover, panel, typographyOpen, goTo, toggleFullscreen]);
+  }, [fullscreen, popover, panel, typographyOpen, displayOpen, goTo, toggleFullscreen]);
 
   const pct = relocation ? Math.round(relocation.fraction * 100) : Math.round(book.progress * 100);
   const timeLeft = relocation?.time
@@ -262,15 +279,46 @@ export function ReaderPage({ book }: { book: Book }) {
           <IconBtn
             label={t("reader.typography")}
             active={typographyOpen}
-            onClick={() => setTypographyOpen((v) => !v)}
+            onClick={() => {
+              setTypographyOpen((v) => !v);
+              setDisplayOpen(false);
+            }}
           >
             <Icon name="type" size={16} />
+          </IconBtn>
+          <IconBtn
+            label={t("reader.display")}
+            active={displayOpen}
+            onClick={() => {
+              setDisplayOpen((v) => !v);
+              setTypographyOpen(false);
+            }}
+          >
+            <Icon name="sun" size={16} />
           </IconBtn>
           <IconBtn label={t("reader.fullscreen")} onClick={toggleFullscreen}>
             <Icon name="fullscreen" size={16} />
           </IconBtn>
         </Titlebar>
       </div>
+
+      {/* night dimmer + warmth: sits over the book, under the chrome */}
+      {(settings.reader.dimmer > 0 || settings.reader.warmth > 0) && (
+        <div className="pointer-events-none absolute inset-x-0 top-11 bottom-9 z-[5]" aria-hidden>
+          {settings.reader.warmth > 0 && (
+            <div
+              className="absolute inset-0"
+              style={{ background: "#ff8a1e", opacity: settings.reader.warmth * 0.22 }}
+            />
+          )}
+          {settings.reader.dimmer > 0 && (
+            <div
+              className="absolute inset-0"
+              style={{ background: "#000", opacity: settings.reader.dimmer }}
+            />
+          )}
+        </div>
+      )}
 
       {/* book */}
       <div className="absolute inset-x-0 top-11 bottom-9">
@@ -302,9 +350,22 @@ export function ReaderPage({ book }: { book: Book }) {
           fullscreen && "opacity-0 hover:opacity-100",
         )}
       >
-        <span className="w-44 truncate">
-          {timeLeft !== null && timeLeft > 0 && t("reader.timeLeftChapter", { minutes: timeLeft })}
-        </span>
+        <div className="flex w-44 items-center gap-2">
+          {scrolled && (
+            <IconBtn
+              label={t("reader.autoScroll")}
+              active={autoScroll}
+              onClick={() => setAutoScroll((v) => !v)}
+            >
+              <Icon name={autoScroll ? "pause" : "play"} size={15} />
+            </IconBtn>
+          )}
+          <span className="truncate">
+            {timeLeft !== null &&
+              timeLeft > 0 &&
+              t("reader.timeLeftChapter", { minutes: timeLeft })}
+          </span>
+        </div>
         <button
           aria-label={t("reader.percent", { percent: pct })}
           className="group mx-4 h-full flex-1"
@@ -362,6 +423,11 @@ export function ReaderPage({ book }: { book: Book }) {
       {typographyOpen && (
         <div className="absolute top-12 right-3 z-20">
           <TypographyPanel />
+        </div>
+      )}
+      {displayOpen && (
+        <div className="absolute top-12 right-3 z-20">
+          <DisplayPopover />
         </div>
       )}
       {popover && (
