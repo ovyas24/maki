@@ -29,3 +29,12 @@ dist-ssr
 # ts-rs default export dir (cargo test writes here without TS_RS_EXPORT_DIR;
 # the canonical bindings live in src/bindings/, generated via `pnpm gen-types`)
 src-tauri/core/bindings/
+
+# makepkg build scratch when testing packaging/aur/PKGBUILD locally
+# (src/ extracts the full source tree incl. node_modules + target — tens of
+# thousands of files; never meant to be committed)
+packaging/aur/src/
+packaging/aur/pkg/
+packaging/aur/*.tar.gz
+packaging/aur/*.tar.zst
+packaging/aur/*.log
