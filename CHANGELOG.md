@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- The window's restored position is now clamped back on-screen at launch.
+  With OS decorations off, a window dragged mostly (but not fully) off a
+  monitor edge would have that off-screen position persisted and re-applied
+  by `tauri-plugin-window-state` on every subsequent launch, rendering the
+  reader's back button and sidebars partly off the visible display.
+- AUR `PKGBUILD` `pkgver` was pinned to `0.1.0`, a tag that predates the
+  shiori→maki rename; `makepkg` built a binary literally named `shiori` while
+  `package()` looked for `maki`, failing. Bumped to track the current release.
+
 ## [0.3.0] - 2026-07-09
 
 ### Added
