@@ -1,4 +1,6 @@
-use crate::models::{Annotation, Book, ImportResult, NewAnnotation, WatchFolder};
+use crate::models::{
+    Annotation, Book, Bookmark, ImportResult, NewAnnotation, NewBookmark, WatchFolder,
+};
 use crate::{Error, Result};
 use rusqlite::{Connection, Row, params};
 use sha2::{Digest, Sha256};
@@ -367,6 +369,38 @@ pub fn delete_annotation(conn: &Connection, id: i64) -> Result<()> {
     Ok(())
 }
 
+pub fn list_bookmarks(conn: &Connection, book_id: i64) -> Result<Vec<Bookmark>> {
+    let mut stmt = conn.prepare(
+        "SELECT id, book_id, cfi, label, created_at
+         FROM bookmarks WHERE book_id = ?1 ORDER BY created_at",
+    )?;
+    let rows = stmt.query_map([book_id], |row| {
+        Ok(Bookmark {
+            id: row.get(0)?,
+            book_id: row.get(1)?,
+            cfi: row.get(2)?,
+            label: row.get(3)?,
+            created_at: row.get(4)?,
+        })
+    })?;
+    Ok(rows.collect::<rusqlite::Result<_>>()?)
+}
+
+pub fn add_bookmark(conn: &Connection, bm: &NewBookmark) -> Result<Bookmark> {
+    conn.execute(
+        "INSERT INTO bookmarks (book_id, cfi, label, created_at) VALUES (?1, ?2, ?3, ?4)",
+        params![bm.book_id, bm.cfi, bm.label, now()],
+    )?;
+    let id = conn.last_insert_rowid();
+    let list = list_bookmarks(conn, bm.book_id)?;
+    Ok(list.into_iter().find(|b| b.id == id).expect("just inserted"))
+}
+
+pub fn delete_bookmark(conn: &Connection, id: i64) -> Result<()> {
+    conn.execute("DELETE FROM bookmarks WHERE id = ?1", [id])?;
+    Ok(())
+}
+
 pub fn list_watch_folders(conn: &Connection) -> Result<Vec<WatchFolder>> {
     let mut stmt = conn.prepare("SELECT id, path FROM watch_folders ORDER BY path")?;
     let rows = stmt.query_map([], |row| {
@@ -543,6 +577,46 @@ mod tests {
             .query_row("SELECT COUNT(*) FROM annotations", [], |r| r.get(0))
             .unwrap();
         assert_eq!(orphans, 0);
+    }
+
+    #[test]
+    fn bookmarks_crud_and_cascade() {
+        let conn = open_in_memory().unwrap();
+        let dir = tempfile::tempdir().unwrap();
+        let a = temp_book(&dir, "book.epub", b"contents");
+        let ImportResult::Imported { book } = import_file(&conn, &a) else {
+            panic!()
+        };
+        let bm = add_bookmark(
+            &conn,
+            &NewBookmark {
+                book_id: book.id,
+                cfi: "epubcfi(/6/4!/4/2)".into(),
+                label: "Chapter 1".into(),
+            },
+        )
+        .unwrap();
+        assert_eq!(list_bookmarks(&conn, book.id).unwrap().len(), 1);
+        assert_eq!(list_bookmarks(&conn, book.id).unwrap()[0].label, "Chapter 1");
+
+        delete_bookmark(&conn, bm.id).unwrap();
+        assert!(list_bookmarks(&conn, book.id).unwrap().is_empty());
+
+        // deleting the book cascades to its bookmarks
+        add_bookmark(
+            &conn,
+            &NewBookmark {
+                book_id: book.id,
+                cfi: "epubcfi(/6/8!/4/2)".into(),
+                label: String::new(),
+            },
+        )
+        .unwrap();
+        remove_book(&conn, book.id, false).unwrap();
+        let count: i64 = conn
+            .query_row("SELECT COUNT(*) FROM bookmarks", [], |r| r.get(0))
+            .unwrap();
+        assert_eq!(count, 0);
     }
 
     #[test]

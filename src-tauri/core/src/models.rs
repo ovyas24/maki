@@ -70,6 +70,31 @@ pub struct NewAnnotation {
 #[derive(Debug, Clone, Serialize, Deserialize, TS)]
 #[serde(rename_all = "camelCase")]
 #[ts(export)]
+pub struct Bookmark {
+    #[ts(type = "number")]
+    pub id: i64,
+    #[ts(type = "number")]
+    pub book_id: i64,
+    pub cfi: String,
+    /// Short context label (e.g. chapter or excerpt) shown in the list.
+    pub label: String,
+    #[ts(type = "number")]
+    pub created_at: i64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, TS)]
+#[serde(rename_all = "camelCase")]
+#[ts(export)]
+pub struct NewBookmark {
+    #[ts(type = "number")]
+    pub book_id: i64,
+    pub cfi: String,
+    pub label: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, TS)]
+#[serde(rename_all = "camelCase")]
+#[ts(export)]
 pub struct WatchFolder {
     #[ts(type = "number")]
     pub id: i64,

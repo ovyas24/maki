@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import type { FoliateView, Relocation, TocItem } from "foliate-js/view.js";
 import * as ipc from "../../ipc";
-import type { Annotation, Book } from "../../ipc";
+import type { Annotation, Book, Bookmark } from "../../ipc";
 import { useApp } from "../../store/app";
 import { useLibrary } from "../../store/library";
 import { useSettings } from "../../store/settings";
@@ -22,7 +22,7 @@ import { SearchPanel } from "./SearchPanel";
 import { SelectionPopover, type PopoverState } from "../annotations/SelectionPopover";
 import { AnnotationsSidebar } from "../annotations/AnnotationsSidebar";
 
-type Panel = "toc" | "annotations" | "search" | "bookmarks" | null;
+type Panel = "toc" | "annotations" | "search" | null;
 
 export function ReaderPage({ book }: { book: Book }) {
   const { t } = useTranslation();
@@ -40,6 +40,7 @@ export function ReaderPage({ book }: { book: Book }) {
   const [displayOpen, setDisplayOpen] = useState(false);
   const [popover, setPopover] = useState<PopoverState | null>(null);
   const [annotations, setAnnotations] = useState<Annotation[]>([]);
+  const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [fullscreen, setFullscreen] = useState(false);
   const [autoScroll, setAutoScroll] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -67,6 +68,7 @@ export function ReaderPage({ book }: { book: Book }) {
     settings.set({ lastBookId: book.id });
     patchBook(book.id, { lastOpenedAt: Math.floor(Date.now() / 1000) });
     void ipc.listAnnotations(book.id).then(setAnnotations);
+    void ipc.listBookmarks(book.id).then(setBookmarks);
     const speed = speedRef.current;
     return () => {
       persistProgress.flush();
@@ -149,6 +151,28 @@ export function ReaderPage({ book }: { book: Book }) {
     setPopover(null);
   }, []);
 
+  const currentCfi = relocation?.cfi;
+  const currentBookmark = bookmarks.find((b) => b.cfi === currentCfi);
+  const toggleBookmark = useCallback(() => {
+    if (currentBookmark) {
+      void ipc.deleteBookmark(currentBookmark.id);
+      setBookmarks((list) => list.filter((b) => b.id !== currentBookmark.id));
+    } else if (currentCfi) {
+      void ipc
+        .addBookmark({
+          bookId: book.id,
+          cfi: currentCfi,
+          label: relocation?.tocItem?.label ?? "",
+        })
+        .then((bm) => setBookmarks((list) => [...list, bm]));
+    }
+  }, [currentBookmark, currentCfi, relocation?.tocItem?.label, book.id]);
+
+  const removeBookmark = useCallback((id: number) => {
+    void ipc.deleteBookmark(id);
+    setBookmarks((list) => list.filter((b) => b.id !== id));
+  }, []);
+
   const toggleFullscreen = useCallback(() => {
     const win = getCurrentWindow();
     setFullscreen((fs) => {
@@ -209,6 +233,9 @@ export function ReaderPage({ book }: { book: Book }) {
           if (e.ctrlKey) e.preventDefault();
           setPanel((p) => (p === "search" ? null : "search"));
           break;
+        case "b":
+          toggleBookmark();
+          break;
         case "F11":
           e.preventDefault();
           toggleFullscreen();
@@ -226,7 +253,16 @@ export function ReaderPage({ book }: { book: Book }) {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [fullscreen, popover, panel, typographyOpen, displayOpen, goTo, toggleFullscreen]);
+  }, [
+    fullscreen,
+    popover,
+    panel,
+    typographyOpen,
+    displayOpen,
+    goTo,
+    toggleFullscreen,
+    toggleBookmark,
+  ]);
 
   const pct = relocation ? Math.round(relocation.fraction * 100) : Math.round(book.progress * 100);
   const timeLeft = relocation?.time
@@ -273,6 +309,13 @@ export function ReaderPage({ book }: { book: Book }) {
             onClick={() => setPanel((p) => (p === "toc" ? null : "toc"))}
           >
             <Icon name="toc" size={16} />
+          </IconBtn>
+          <IconBtn
+            label={currentBookmark ? t("reader.removeBookmark") : t("reader.addBookmark")}
+            active={currentBookmark !== undefined}
+            onClick={toggleBookmark}
+          >
+            <Icon name={currentBookmark ? "bookmarkFilled" : "bookmark"} size={16} />
           </IconBtn>
           <IconBtn
             label={t("reader.search")}
@@ -417,6 +460,12 @@ export function ReaderPage({ book }: { book: Book }) {
             void viewRef.current?.goTo(href);
             setPanel(null);
           }}
+          bookmarks={bookmarks}
+          onJumpBookmark={(cfi) => {
+            void viewRef.current?.goTo(cfi);
+            setPanel(null);
+          }}
+          onDeleteBookmark={removeBookmark}
         />
       </aside>
       <aside

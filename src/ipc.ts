@@ -5,11 +5,13 @@ import { invoke } from "@tauri-apps/api/core";
 import { listen, type UnlistenFn } from "@tauri-apps/api/event";
 import type { Annotation } from "./bindings/Annotation";
 import type { Book } from "./bindings/Book";
+import type { Bookmark } from "./bindings/Bookmark";
 import type { ImportResult } from "./bindings/ImportResult";
 import type { NewAnnotation } from "./bindings/NewAnnotation";
+import type { NewBookmark } from "./bindings/NewBookmark";
 import type { WatchFolder } from "./bindings/WatchFolder";
 
-export type { Annotation, Book, ImportResult, NewAnnotation, WatchFolder };
+export type { Annotation, Book, Bookmark, ImportResult, NewAnnotation, NewBookmark, WatchFolder };
 
 export const listBooks = () => invoke<Book[]>("list_books");
 
@@ -57,6 +59,13 @@ export const updateAnnotation = (
 ) => invoke<void>("update_annotation", { id, ...fields });
 
 export const deleteAnnotation = (id: number) => invoke<void>("delete_annotation", { id });
+
+export const listBookmarks = (bookId: number) => invoke<Bookmark[]>("list_bookmarks", { bookId });
+
+export const addBookmark = (bookmark: NewBookmark) =>
+  invoke<Bookmark>("add_bookmark", { bookmark });
+
+export const deleteBookmark = (id: number) => invoke<void>("delete_bookmark", { id });
 
 export const listWatchFolders = () => invoke<WatchFolder[]>("list_watch_folders");
 

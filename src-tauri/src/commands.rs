@@ -1,5 +1,7 @@
 use maki_core::Connection;
-use maki_core::models::{Annotation, Book, ImportResult, NewAnnotation, WatchFolder};
+use maki_core::models::{
+    Annotation, Book, Bookmark, ImportResult, NewAnnotation, NewBookmark, WatchFolder,
+};
 use maki_core::watch::WatchHandle;
 use maki_core::{covers, library};
 use std::path::{Path, PathBuf};
@@ -161,6 +163,27 @@ pub async fn update_annotation(
 pub async fn delete_annotation(state: State<'_, AppState>, id: i64) -> CmdResult<()> {
     let conn = state.conn.lock().unwrap();
     library::delete_annotation(&conn, id).map_err(err)
+}
+
+#[tauri::command]
+pub async fn list_bookmarks(state: State<'_, AppState>, book_id: i64) -> CmdResult<Vec<Bookmark>> {
+    let conn = state.conn.lock().unwrap();
+    library::list_bookmarks(&conn, book_id).map_err(err)
+}
+
+#[tauri::command]
+pub async fn add_bookmark(
+    state: State<'_, AppState>,
+    bookmark: NewBookmark,
+) -> CmdResult<Bookmark> {
+    let conn = state.conn.lock().unwrap();
+    library::add_bookmark(&conn, &bookmark).map_err(err)
+}
+
+#[tauri::command]
+pub async fn delete_bookmark(state: State<'_, AppState>, id: i64) -> CmdResult<()> {
+    let conn = state.conn.lock().unwrap();
+    library::delete_bookmark(&conn, id).map_err(err)
 }
 
 #[tauri::command]

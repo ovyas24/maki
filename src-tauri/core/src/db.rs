@@ -82,6 +82,16 @@ const MIGRATIONS: &[&str] = &[
             VALUES ('delete', old.id, old.text, old.note);
         INSERT INTO annotations_fts(rowid, text, note) VALUES (new.id, new.text, new.note);
     END;",
+    // 3: bookmarks — a lightweight per-book location list, distinct from
+    // annotations (no selected text, just a spot to jump back to).
+    "CREATE TABLE bookmarks (
+        id INTEGER PRIMARY KEY,
+        book_id INTEGER NOT NULL REFERENCES books (id) ON DELETE CASCADE,
+        cfi TEXT NOT NULL,
+        label TEXT NOT NULL DEFAULT '',
+        created_at INTEGER NOT NULL
+    );
+    CREATE INDEX bookmarks_book ON bookmarks (book_id);",
 ];
 
 /// Open (creating if needed) the library database and run pending migrations.
