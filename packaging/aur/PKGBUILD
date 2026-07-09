@@ -2,7 +2,7 @@
 #
 # Publishing to the AUR:
 #   Easiest — run the helper (after the GitHub release for the version exists):
-#       packaging/aur/publish.sh 0.1.0
+#       packaging/aur/publish.sh 0.3.0
 #   It clones the AUR repo, fills sha256sums, regenerates .SRCINFO, test-builds,
 #   and pushes.
 #
@@ -19,7 +19,7 @@
 #     git add PKGBUILD .SRCINFO && git commit -m "v$pkgver" && git push
 
 pkgname=maki
-pkgver=0.1.0
+pkgver=0.3.0
 pkgrel=1
 pkgdesc="A beautiful, fast ebook reader for Linux"
 arch=(x86_64)

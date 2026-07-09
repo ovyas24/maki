@@ -1,6 +1,6 @@
 pkgbase = maki
 	pkgdesc = A beautiful, fast ebook reader for Linux
-	pkgver = 0.1.0
+	pkgver = 0.3.0
 	pkgrel = 1
 	url = https://github.com/ovyas24/maki
 	arch = x86_64
@@ -17,7 +17,7 @@ pkgbase = maki
 	depends = pango
 	depends = hicolor-icon-theme
 	options = !lto
-	source = maki-0.1.0.tar.gz::https://github.com/ovyas24/maki/archive/v0.1.0.tar.gz
+	source = maki-0.3.0.tar.gz::https://github.com/ovyas24/maki/archive/v0.3.0.tar.gz
 	sha256sums = SKIP
 
 pkgname = maki
