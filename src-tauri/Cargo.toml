@@ -3,7 +3,7 @@ members = ["core"]
 
 [package]
 name = "maki"
-version = "0.2.0"
+version = "0.3.0"
 description = "A beautiful, fast ebook reader for Linux"
 authors = ["Maki contributors"]
 license = "GPL-3.0-or-later"

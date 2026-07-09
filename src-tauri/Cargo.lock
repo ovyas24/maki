@@ -2127,7 +2127,7 @@ checksum = "0ceec5bc11778974d1bcb055b18002eba7f4b3518b6a0081b3af5f21666da9ad"
 
 [[package]]
 name = "maki"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "maki-core",
  "serde",
@@ -2141,7 +2141,7 @@ dependencies = [
 
 [[package]]
 name = "maki-core"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "image",
  "notify",

@@ -393,7 +393,10 @@ pub fn add_bookmark(conn: &Connection, bm: &NewBookmark) -> Result<Bookmark> {
     )?;
     let id = conn.last_insert_rowid();
     let list = list_bookmarks(conn, bm.book_id)?;
-    Ok(list.into_iter().find(|b| b.id == id).expect("just inserted"))
+    Ok(list
+        .into_iter()
+        .find(|b| b.id == id)
+        .expect("just inserted"))
 }
 
 pub fn delete_bookmark(conn: &Connection, id: i64) -> Result<()> {
@@ -597,7 +600,10 @@ mod tests {
         )
         .unwrap();
         assert_eq!(list_bookmarks(&conn, book.id).unwrap().len(), 1);
-        assert_eq!(list_bookmarks(&conn, book.id).unwrap()[0].label, "Chapter 1");
+        assert_eq!(
+            list_bookmarks(&conn, book.id).unwrap()[0].label,
+            "Chapter 1"
+        );
 
         delete_bookmark(&conn, bm.id).unwrap();
         assert!(list_bookmarks(&conn, book.id).unwrap().is_empty());

@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-07-09
+
+### Added
+
+- Live page-layout controls in the reader: column count (auto / single /
+  double) and adjustable line width, applied instantly while reading.
+- Auto-scroll for continuous mode, with a play/pause control and adjustable
+  speed; pauses on manual navigation.
+- In-book full-text search with results grouped by chapter, jump-to-match, and
+  automatic match highlighting (`f` / Ctrl+F).
+- Bookmarks: quick-bookmark the current page (toggle button or `b`), listed at
+  the top of the Contents panel to jump back to.
+- Night reading overlay: adjustable brightness (dim) and warmth.
+- Chapter navigation (`[` / `]`) and jump to book start/end (Home / End).
+
+### Fixed
+
+- The page-turn effect no longer plays a phantom animation at the first page
+  (Previous) or the last page (Next).
+- The page-turn shadow is now locked to foliate's page slide (matching its
+  300ms easeOutQuad and one-page-width travel), fixing the misaligned sweep.
+
 ## [0.2.0] - 2026-07-08
 
 ### Added
@@ -72,7 +94,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   window size/position, i18n scaffolding (English, Japanese stub).
 - Zero telemetry, zero network requests.
 
-[Unreleased]: https://github.com/ovyas24/maki/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/ovyas24/maki/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/ovyas24/maki/releases/tag/v0.3.0
 [0.2.0]: https://github.com/ovyas24/maki/releases/tag/v0.2.0
 [0.1.1]: https://github.com/ovyas24/maki/releases/tag/v0.1.1
 [0.1.0]: https://github.com/ovyas24/maki/releases/tag/v0.1.0

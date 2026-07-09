@@ -29,3 +29,10 @@ next. Nothing here is a promise; PRs welcome on any of it.
 - **Sideloading helper** for Kobo/Kindle devices.
 - **Plugin/theme system.**
 - **Flatpak** packaging (manifest stub in `packaging/flatpak/`).
+
+## Reader polish (deferred from 0.3)
+
+- Per-book layout/typography overrides (currently global).
+- Reading ruler / line-focus mode.
+- "Respect publisher styles" toggle (vs Maki's overrides).
+- Auto-page-advance in paginated mode (auto-scroll's paginated counterpart).

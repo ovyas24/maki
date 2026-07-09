@@ -72,6 +72,7 @@ regenerate with `pnpm gen-types` after changing them.
 | `mark_opened(id)` / `set_finished(id, bool)` | Bookkeeping |
 | `remove_book(id, delete_file)` | Remove from library, optionally delete file |
 | `list/add/update/delete_annotation` | Annotation CRUD |
+| `list/add/delete_bookmark` | Bookmark CRUD (per-book jump points) |
 | `list/add/remove_watch_folder` | Watch folder CRUD (restarts watcher) |
 | `get_settings` / `save_settings` | `~/.config/maki/settings.json` |
 | `save_text_file(path, contents)` | Annotation Markdown export (path from save dialog) |
@@ -90,6 +91,9 @@ Migration 2 adds FTS5 external-content tables `books_fts` (title, author) and
 `annotations_fts` (text, note), kept in sync with `books`/`annotations` by
 insert/update/delete triggers. `library::search` queries both and returns book
 ids ranked by `bm25`, metadata matches before annotation-only matches.
+
+Migration 3 adds `bookmarks` (book_id FK `ON DELETE CASCADE`, cfi, label) — a
+lightweight per-book list of jump points, distinct from annotations.
 
 ```mermaid
 erDiagram
