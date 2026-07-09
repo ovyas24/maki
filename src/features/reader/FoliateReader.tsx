@@ -121,12 +121,14 @@ export function FoliateReader(props: Props) {
       };
       const origNext = nav.next.bind(view);
       const origPrev = nav.prev.bind(view);
+      // Skip the effect at book boundaries: foliate's next/prev no-op when
+      // there's no adjacent page, so animating there would be a phantom turn.
       nav.next = (d?: number) => {
-        playTurn("next");
+        if (!view?.renderer?.atEnd) playTurn("next");
         return origNext(d);
       };
       nav.prev = (d?: number) => {
-        playTurn("prev");
+        if (!view?.renderer?.atStart) playTurn("prev");
         return origPrev(d);
       };
 

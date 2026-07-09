@@ -182,49 +182,43 @@
 }
 
 /* ------------------------------------------------------------------ */
-/* Reader paper page-turn: a soft leading-edge shadow sweeps across in  */
-/* the turn direction, over foliate's own page slide.                  */
+/* Reader paper page-turn: a soft gutter shadow rides the seam of the   */
+/* turning page. A full-viewport leaf translates by exactly one page    */
+/* width with the same duration + easing as foliate's own slide (300ms  */
+/* easeOutQuad, paginator.js), so the shadow stays locked to the page.  */
 /* ------------------------------------------------------------------ */
 .page-turn::after {
   content: "";
   position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 42%;
+  inset: 0;
+  animation-duration: 300ms;
+  animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94); /* easeOutQuad */
+  animation-fill-mode: both;
 }
+/* next: outgoing page slides left — shadow on its trailing (right) edge */
 .page-turn-next::after {
-  /* faint highlight (page edge catching light) leading a soft shadow */
-  background: linear-gradient(
-    to right,
-    transparent 55%,
-    rgb(255 255 255 / 0.05) 72%,
-    rgb(0 0 0 / 0.2) 100%
-  );
-  animation: page-turn-next 300ms var(--ease-out) both;
-}
-.page-turn-prev::after {
-  background: linear-gradient(
-    to left,
-    transparent 55%,
-    rgb(255 255 255 / 0.05) 72%,
-    rgb(0 0 0 / 0.2) 100%
-  );
-  animation: page-turn-prev 300ms var(--ease-out) both;
+  background: linear-gradient(to right, transparent 86%, rgb(0 0 0 / 0.18) 100%);
+  animation-name: page-turn-next;
 }
 @keyframes page-turn-next {
   from {
-    transform: translateX(125%);
+    transform: translateX(0);
   }
   to {
-    transform: translateX(-130%);
+    transform: translateX(-100%);
   }
+}
+/* prev: previous page slides in from the left — shadow on its left edge */
+.page-turn-prev::after {
+  background: linear-gradient(to left, transparent 86%, rgb(0 0 0 / 0.18) 100%);
+  animation-name: page-turn-prev;
 }
 @keyframes page-turn-prev {
   from {
-    transform: translateX(-125%);
+    transform: translateX(0);
   }
   to {
-    transform: translateX(130%);
+    transform: translateX(100%);
   }
 }
 

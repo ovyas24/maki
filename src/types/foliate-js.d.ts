@@ -46,6 +46,25 @@ declare module "foliate-js/view.js" {
     prev: (distance?: number) => Promise<void>;
     getContents: () => Array<{ doc: Document; index: number; overlayer?: unknown }>;
     scrolled?: boolean;
+    /** True at the very first / last page of the book (no adjacent page). */
+    readonly atStart: boolean;
+    readonly atEnd: boolean;
+    scrollBy: (dx: number, dy: number) => void;
+    prevSection: () => Promise<void>;
+    nextSection: () => Promise<void>;
+    firstSection: () => Promise<void>;
+    lastSection: () => Promise<void>;
+  }
+
+  export interface SearchExcerpt {
+    pre: string;
+    match: string;
+    post: string;
+  }
+  export interface SearchResult {
+    label?: string;
+    subitems?: Array<{ cfi: string; excerpt: SearchExcerpt }>;
+    progress?: number;
   }
 
   export interface FoliateView extends HTMLElement {
@@ -63,6 +82,12 @@ declare module "foliate-js/view.js" {
     addAnnotation: (annotation: { value: string; color?: string }) => Promise<unknown>;
     deleteAnnotation: (annotation: { value: string }) => Promise<unknown>;
     deselect: () => void;
+    goToTextStart: () => Promise<void>;
+    search: (opts: {
+      query: string;
+      index?: number;
+    }) => AsyncGenerator<SearchResult | "done", void, unknown>;
+    clearSearch: () => void;
     book: FoliateBook;
     renderer: Renderer;
     lastLocation?: Relocation;
