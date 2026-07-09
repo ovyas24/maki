@@ -170,6 +170,18 @@ export function ReaderPage({ book }: { book: Book }) {
           if (e.shiftKey) void view?.prev();
           else void view?.next();
           break;
+        case "[":
+          void view?.renderer?.prevSection();
+          break;
+        case "]":
+          void view?.renderer?.nextSection();
+          break;
+        case "Home":
+          void view?.goToTextStart();
+          break;
+        case "End":
+          void view?.renderer?.lastSection();
+          break;
         case "t":
           setPanel((p) => (p === "toc" ? null : "toc"));
           break;

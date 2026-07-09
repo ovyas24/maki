@@ -24,6 +24,10 @@ const GROUPS: Array<{ group: string; items: Array<{ keys: string[]; label: strin
     items: [
       { keys: ["→", "PgDn", "Space"], label: "nextPage" },
       { keys: ["←", "PgUp"], label: "prevPage" },
+      { keys: ["[", "]"], label: "chapterNav" },
+      { keys: ["Home", "End"], label: "startEnd" },
+      { keys: ["F"], label: "searchInBook" },
+      { keys: ["B"], label: "bookmark" },
       { keys: ["T"], label: "toggleToc" },
       { keys: ["A"], label: "toggleAnnotations" },
       { keys: ["F11"], label: "fullscreen" },

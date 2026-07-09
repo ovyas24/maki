@@ -21,7 +21,18 @@ export interface ReaderSettings {
   flow: Flow;
   /** Animate page turns (eased horizontal slide) in paginated mode. */
   pageAnimation: boolean;
+  /** Column layout in paginated mode: auto (foliate decides), 1, or 2 pages. */
+  columns: Columns;
+  /** Max line length / column width, in px. */
+  lineWidth: number;
+  /** Auto-scroll speed in continuous mode, px per second. */
+  autoScrollSpeed: number;
+  /** Night overlay: black opacity 0–0.7 and warm-tint strength 0–1. */
+  dimmer: number;
+  warmth: number;
 }
+
+export type Columns = "auto" | "single" | "double";
 
 export interface SettingsState {
   appTheme: AppTheme;
@@ -48,6 +59,11 @@ export const DEFAULT_READER: ReaderSettings = {
   theme: "light",
   flow: "paginated",
   pageAnimation: true,
+  columns: "auto",
+  lineWidth: 720,
+  autoScrollSpeed: 40,
+  dimmer: 0,
+  warmth: 0,
 };
 
 const DEFAULTS = {

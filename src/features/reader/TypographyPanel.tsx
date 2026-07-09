@@ -1,5 +1,11 @@
 import { useTranslation } from "react-i18next";
-import { useSettings, type ReaderFont, type ReaderTheme, type Flow } from "../../store/settings";
+import {
+  useSettings,
+  type ReaderFont,
+  type ReaderTheme,
+  type Flow,
+  type Columns,
+} from "../../store/settings";
 import { READER_THEMES } from "./themes";
 import { cn } from "../../lib/utils";
 
@@ -92,6 +98,17 @@ export function TypographyPanel() {
           className="w-40 accent-(--accent)"
         />
       </Row>
+      <Row label={t("reader.lineWidth")}>
+        <input
+          type="range"
+          min={480}
+          max={960}
+          step={20}
+          value={reader.lineWidth}
+          onChange={(e) => setReader({ lineWidth: Number(e.target.value) })}
+          className="w-40 accent-(--accent)"
+        />
+      </Row>
       <Row label={t("reader.justify")}>
         <input
           type="checkbox"
@@ -119,14 +136,27 @@ export function TypographyPanel() {
         />
       </Row>
       {reader.flow === "paginated" && (
-        <Row label={t("reader.pageAnimation")}>
-          <input
-            type="checkbox"
-            checked={reader.pageAnimation}
-            onChange={(e) => setReader({ pageAnimation: e.target.checked })}
-            className="h-4 w-4 accent-(--accent)"
-          />
-        </Row>
+        <>
+          <Row label={t("reader.columns")}>
+            <Segmented<Columns>
+              options={[
+                { value: "auto", label: t("reader.columnsAuto") },
+                { value: "single", label: "1" },
+                { value: "double", label: "2" },
+              ]}
+              value={reader.columns}
+              onChange={(columns) => setReader({ columns })}
+            />
+          </Row>
+          <Row label={t("reader.pageAnimation")}>
+            <input
+              type="checkbox"
+              checked={reader.pageAnimation}
+              onChange={(e) => setReader({ pageAnimation: e.target.checked })}
+              className="h-4 w-4 accent-(--accent)"
+            />
+          </Row>
+        </>
       )}
       <div className="mt-2 border-t border-border pt-3">
         <div className="mb-2 text-sm text-text-muted">{t("reader.theme")}</div>

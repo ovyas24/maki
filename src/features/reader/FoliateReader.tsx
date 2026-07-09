@@ -55,8 +55,10 @@ function applySettings(view: FoliateView, settings: ReaderSettings) {
   if (!renderer) return;
   renderer.setAttribute("flow", settings.flow);
   renderer.setAttribute("gap", `${settings.margin}%`);
-  renderer.setAttribute("max-column-count", "2");
-  renderer.setAttribute("max-inline-size", "720px");
+  // "single" forces one column; "auto"/"double" allow a two-page spread when
+  // the window is wide enough (foliate collapses to one on narrow widths).
+  renderer.setAttribute("max-column-count", settings.columns === "single" ? "1" : "2");
+  renderer.setAttribute("max-inline-size", `${settings.lineWidth}px`);
   renderer.setAttribute("margin", "44px");
   // foliate's paginator animates page-turn scrolls when `animated` is present.
   if (settings.pageAnimation && settings.flow === "paginated" && !prefersReducedMotion()) {
