@@ -18,10 +18,11 @@ import { useAutoScroll } from "./useAutoScroll";
 import { TocSidebar } from "./TocSidebar";
 import { TypographyPanel } from "./TypographyPanel";
 import { DisplayPopover } from "./DisplayPopover";
+import { SearchPanel } from "./SearchPanel";
 import { SelectionPopover, type PopoverState } from "../annotations/SelectionPopover";
 import { AnnotationsSidebar } from "../annotations/AnnotationsSidebar";
 
-type Panel = "toc" | "annotations" | null;
+type Panel = "toc" | "annotations" | "search" | "bookmarks" | null;
 
 export function ReaderPage({ book }: { book: Book }) {
   const { t } = useTranslation();
@@ -204,6 +205,10 @@ export function ReaderPage({ book }: { book: Book }) {
         case "a":
           setPanel((p) => (p === "annotations" ? null : "annotations"));
           break;
+        case "f":
+          if (e.ctrlKey) e.preventDefault();
+          setPanel((p) => (p === "search" ? null : "search"));
+          break;
         case "F11":
           e.preventDefault();
           toggleFullscreen();
@@ -268,6 +273,13 @@ export function ReaderPage({ book }: { book: Book }) {
             onClick={() => setPanel((p) => (p === "toc" ? null : "toc"))}
           >
             <Icon name="toc" size={16} />
+          </IconBtn>
+          <IconBtn
+            label={t("reader.search")}
+            active={panel === "search"}
+            onClick={() => setPanel((p) => (p === "search" ? null : "search"))}
+          >
+            <Icon name="search" size={16} />
           </IconBtn>
           <IconBtn
             label={t("reader.annotations")}
@@ -419,6 +431,17 @@ export function ReaderPage({ book }: { book: Book }) {
           onJump={(a) => void viewRef.current?.goTo(a.cfi)}
           onDelete={(a) => void removeAnnotation(a)}
         />
+      </aside>
+      <aside
+        className={cn(
+          "absolute top-11 right-0 bottom-9 z-10 w-80 border-l border-border bg-bg-elevated shadow-lift transition-transform duration-200",
+          panel === "search" ? "translate-x-0" : "translate-x-full",
+        )}
+      >
+        {/* Mounted only while open so unmount clears the match highlights. */}
+        {panel === "search" && (
+          <SearchPanel viewRef={viewRef} onJump={(cfi) => void viewRef.current?.goTo(cfi)} />
+        )}
       </aside>
       {typographyOpen && (
         <div className="absolute top-12 right-3 z-20">
