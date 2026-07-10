@@ -152,6 +152,27 @@
   }
 }
 
+/* A restrained wash gives the library depth while keeping books dominant. */
+.library-canvas {
+  background:
+    radial-gradient(
+      circle at 12% 0%,
+      color-mix(in srgb, var(--accent) 7%, transparent),
+      transparent 30rem
+    ),
+    var(--bg);
+}
+
+.settings-canvas {
+  background:
+    radial-gradient(
+      circle at 88% 0%,
+      color-mix(in srgb, var(--accent) 6%, transparent),
+      transparent 28rem
+    ),
+    var(--bg);
+}
+
 /* ------------------------------------------------------------------ */
 /* Splash screen                                                       */
 /* ------------------------------------------------------------------ */

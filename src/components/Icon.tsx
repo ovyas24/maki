@@ -38,6 +38,9 @@ const PATHS: Record<string, string> = {
   pause: "M8 5v14M16 5v14",
   chevronDoubleLeft: "m11 18-6-6 6-6M18 18l-6-6 6-6",
   chevronDoubleRight: "m13 18 6-6-6-6M6 18l6-6-6-6",
+  palette:
+    "M12 3a9 9 0 1 0 0 18h1.5a1.5 1.5 0 0 0 0-3H12a2 2 0 0 1 0-4h2a7 7 0 0 0-2-11ZM7.5 10h.01M9.5 6.5h.01M14.5 6.5h.01M17 10h.01",
+  shield: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Zm-3-10 2 2 4-4",
 };
 
 export function Icon({

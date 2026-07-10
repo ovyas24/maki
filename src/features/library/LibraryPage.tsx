@@ -8,7 +8,7 @@ import { useSettings, type SortKey } from "../../store/settings";
 import { Icon } from "../../components/Icon";
 import { Button, Dialog, DialogActions, DialogTitle } from "../../components/Dialog";
 import { cn, debounce } from "../../lib/utils";
-import { filterAndSort, continueReading } from "./sorting";
+import { filterAndSort, continueReading, filterByStatus, type LibraryFilter } from "./sorting";
 import { ContinueReading } from "./ContinueReading";
 import { BookGrid } from "./BookGrid";
 import { BookList } from "./BookList";
@@ -16,6 +16,7 @@ import { BookList } from "./BookList";
 const BOOK_FILTERS = [
   { name: "Ebooks", extensions: ["epub", "mobi", "azw", "azw3", "fb2", "fbz", "cbz", "pdf"] },
 ];
+const LIBRARY_FILTERS: LibraryFilter[] = ["all", "reading", "unread", "finished", "missing"];
 
 export async function pickAndImport(importPaths: (paths: string[]) => Promise<unknown>) {
   const picked = await openFileDialog({ multiple: true, filters: BOOK_FILTERS });
@@ -27,6 +28,7 @@ export function LibraryPage() {
   const { books, query, setQuery, importPaths, remove } = useLibrary();
   const settings = useSettings();
   const [toRemove, setToRemove] = useState<Book | null>(null);
+  const [filter, setFilter] = useState<LibraryFilter>("all");
   const searchRef = useRef<HTMLInputElement>(null);
 
   // FTS5 results (metadata + annotations), tagged with the query they answer.
@@ -43,7 +45,7 @@ export function LibraryPage() {
     if (q) runSearch(q);
   }, [query, books, runSearch]);
 
-  const visible = useMemo(() => {
+  const matched = useMemo(() => {
     const q = query.trim();
     if (!q) return filterAndSort(books, "", settings.sort);
     // Authoritative FTS ordering once it answers this exact query…
@@ -54,7 +56,15 @@ export function LibraryPage() {
     // …instant client fuzzy as a placeholder until it does.
     return filterAndSort(books, q, settings.sort);
   }, [books, query, fts, settings.sort]);
+  const visible = useMemo(() => filterByStatus(matched, filter), [matched, filter]);
   const hero = useMemo(() => continueReading(books), [books]);
+  const filterCounts = useMemo(
+    () =>
+      Object.fromEntries(
+        LIBRARY_FILTERS.map((key) => [key, filterByStatus(books, key).length]),
+      ) as Record<LibraryFilter, number>,
+    [books],
+  );
 
   // "/" focuses search (unless typing elsewhere)
   useEffect(() => {
@@ -71,9 +81,17 @@ export function LibraryPage() {
   const sortKeys: SortKey[] = ["recentlyOpened", "recentlyAdded", "title", "author", "progress"];
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="library-canvas flex h-full flex-col">
       <div className="flex shrink-0 items-center gap-3 px-8 pt-6 pb-4">
-        <h1 className="text-xl font-semibold tracking-tight">{t("library.title")}</h1>
+        <div>
+          <h1 className="text-xl font-semibold tracking-tight">{t("library.title")}</h1>
+          <p className="mt-0.5 text-xs text-text-muted">
+            {t("library.summary", {
+              count: books.length,
+              reading: filterCounts.reading,
+            })}
+          </p>
+        </div>
         <div className="relative ml-6 max-w-xs flex-1">
           <Icon
             name="search"
@@ -136,11 +154,62 @@ export function LibraryPage() {
           <EmptyLibrary onImport={() => void pickAndImport(importPaths)} />
         ) : (
           <>
-            {!query && <ContinueReading books={hero} />}
+            {!query && filter === "all" && <ContinueReading books={hero} />}
+            <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <h2 className="text-lg font-semibold">{t("library.allBooks")}</h2>
+                <p className="mt-0.5 text-xs text-text-muted">
+                  {t("library.showing", { count: visible.length })}
+                </p>
+              </div>
+              <div
+                className="flex max-w-full gap-1 overflow-x-auto rounded-xl border border-border bg-bg-elevated/80 p-1 shadow-card"
+                aria-label={t("library.filters.label")}
+              >
+                {LIBRARY_FILTERS.map((key) => (
+                  <button
+                    key={key}
+                    aria-pressed={filter === key}
+                    onClick={() => setFilter(key)}
+                    className={cn(
+                      "transition-fast flex h-8 shrink-0 items-center gap-1.5 rounded-lg px-3 text-xs font-medium",
+                      filter === key
+                        ? "bg-accent text-accent-contrast shadow-sm"
+                        : "text-text-muted hover:bg-bg-sunken hover:text-text",
+                    )}
+                  >
+                    {t(`library.filters.${key}`)}
+                    <span className={cn("tabular-nums", filter === key && "opacity-75")}>
+                      {filterCounts[key]}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
             {visible.length === 0 ? (
-              <p className="mt-16 text-center text-text-muted">
-                {t("library.noResults", { query })}
-              </p>
+              <div className="mt-12 flex flex-col items-center text-center">
+                <span className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-bg-sunken text-text-muted">
+                  <Icon name="search" size={20} />
+                </span>
+                <p className="font-medium">
+                  {query
+                    ? t("library.noResults", { query })
+                    : t("library.filters.empty", { filter: t(`library.filters.${filter}`) })}
+                </p>
+                <p className="mt-1 max-w-sm text-sm text-text-muted">
+                  {t("library.filters.emptyHint")}
+                </p>
+                <Button
+                  variant="ghost"
+                  className="mt-3"
+                  onClick={() => {
+                    setQuery("");
+                    setFilter("all");
+                  }}
+                >
+                  {t("library.filters.clear")}
+                </Button>
+              </div>
             ) : settings.view === "grid" ? (
               <BookGrid books={visible} onRemove={setToRemove} />
             ) : (

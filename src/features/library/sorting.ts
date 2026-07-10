@@ -2,6 +2,8 @@ import type { Book } from "../../ipc";
 import type { SortKey } from "../../store/settings";
 import { fuzzyScore } from "./fuzzy";
 
+export type LibraryFilter = "all" | "reading" | "unread" | "finished" | "missing";
+
 /** Filter by fuzzy query (title + author), then sort. Pure — unit tested. */
 export function filterAndSort(books: Book[], query: string, sort: SortKey): Book[] {
   const q = query.trim();
@@ -32,4 +34,15 @@ export function continueReading(books: Book[]): Book[] {
     .filter((b) => b.lastOpenedAt && !b.finished && !b.missing)
     .sort((a, b) => (b.lastOpenedAt ?? 0) - (a.lastOpenedAt ?? 0))
     .slice(0, 4);
+}
+
+/** Filter the collection by mutually understandable reading states. */
+export function filterByStatus(books: Book[], filter: LibraryFilter): Book[] {
+  if (filter === "all") return books;
+  if (filter === "missing") return books.filter((book) => book.missing);
+  if (filter === "finished") return books.filter((book) => book.finished && !book.missing);
+  if (filter === "reading") {
+    return books.filter((book) => book.progress > 0 && !book.finished && !book.missing);
+  }
+  return books.filter((book) => book.progress === 0 && !book.finished && !book.missing);
 }

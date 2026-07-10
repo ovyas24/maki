@@ -11,6 +11,7 @@ import { Sidebar } from "./components/Sidebar";
 import { Icon } from "./components/Icon";
 import { SplashScreen } from "./components/SplashScreen";
 import { ShortcutsOverlay } from "./components/ShortcutsOverlay";
+import { ImportToast } from "./components/ImportToast";
 import { LibraryPage, pickAndImport } from "./features/library/LibraryPage";
 import { extractPendingMetadata } from "./features/library/extractMetadata";
 import { ReaderPage } from "./features/reader/ReaderPage";
@@ -121,6 +122,7 @@ export default function App() {
         </div>
       )}
       <ShortcutsOverlay />
+      <ImportToast />
     </div>
   );
 }

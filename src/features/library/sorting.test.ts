@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { continueReading, filterAndSort } from "./sorting";
+import { continueReading, filterAndSort, filterByStatus } from "./sorting";
 import type { Book } from "../../ipc";
 
 const book = (over: Partial<Book>): Book => ({
@@ -67,5 +67,25 @@ describe("continueReading", () => {
       book({ id: 6 }),
     ]);
     expect(hero.map((b) => b.id)).toEqual([2, 1]);
+  });
+});
+
+describe("filterByStatus", () => {
+  const states = [
+    book({ id: 1, progress: 0 }),
+    book({ id: 2, progress: 0.4 }),
+    book({ id: 3, progress: 1, finished: true }),
+    book({ id: 4, progress: 0.2, missing: true }),
+  ];
+
+  it("separates active reading states and excludes missing books", () => {
+    expect(filterByStatus(states, "unread").map((b) => b.id)).toEqual([1]);
+    expect(filterByStatus(states, "reading").map((b) => b.id)).toEqual([2]);
+    expect(filterByStatus(states, "finished").map((b) => b.id)).toEqual([3]);
+    expect(filterByStatus(states, "missing").map((b) => b.id)).toEqual([4]);
+  });
+
+  it("returns the original collection for all", () => {
+    expect(filterByStatus(states, "all")).toBe(states);
   });
 });
