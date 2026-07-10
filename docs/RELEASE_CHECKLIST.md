@@ -44,20 +44,20 @@ packaging/aur/publish.sh X.Y.Z
 Or manually:
 
 ```sh
-git clone ssh://aur@aur.archlinux.org/maki.git aur-maki
-cd aur-maki
+git clone ssh://aur@aur.archlinux.org/maki-reader.git aur-maki-reader
+cd aur-maki-reader
 cp /path/to/maki/packaging/aur/PKGBUILD .
 updpkgsums                          # real sha256 of the release tarball
 makepkg --printsrcinfo > .SRCINFO
 makepkg -si                         # full test build + install
-namcap PKGBUILD maki-0.1.0-1-x86_64.pkg.tar.zst
+namcap PKGBUILD maki-reader-X.Y.Z-1-x86_64.pkg.tar.zst
 git add PKGBUILD .SRCINFO
 git commit -m "v0.1.0"
 git push                            # this publishes the package
 ```
 
-- [ ] Check <https://aur.archlinux.org/packages/maki> renders correctly and
-      `yay -S maki` works on a clean system/container.
+- [ ] Check <https://aur.archlinux.org/packages/maki-reader> renders correctly
+      and `yay -S maki-reader` works on a clean system/container.
 
 ## 4. Announce
 
@@ -86,7 +86,7 @@ Post after the AUR package is installable. Lead with the screenshot.
   > library folder. Highlights/notes export to Markdown. Zero network
   > requests — no telemetry, nothing phones home.
   >
-  > Arch: `yay -S maki` · deb/rpm/AppImage on the releases page.
+  > Arch: `yay -S maki-reader` · deb/rpm/AppImage on the releases page.
   > Roadmap: dictionaries, reading stats, shelves, TTS, OPDS.
   > Happy to answer anything about Tauri vs Electron for this kind of app.
 

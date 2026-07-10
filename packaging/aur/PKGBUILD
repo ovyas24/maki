@@ -10,15 +10,17 @@
 #   (https://aur.archlinux.org → My Account → SSH Public Key).
 #
 #   Manual equivalent:
-#     git clone ssh://aur@aur.archlinux.org/maki.git aur-maki && cd aur-maki
+#     git clone ssh://aur@aur.archlinux.org/maki-reader.git aur-maki-reader
+#     cd aur-maki-reader
 #     cp /path/to/maki/packaging/aur/PKGBUILD .
 #     updpkgsums                        # fills in real sha256sums
 #     makepkg --printsrcinfo > .SRCINFO
 #     makepkg -si                       # test build + install locally
-#     namcap PKGBUILD maki-*.pkg.tar.zst
+#     namcap PKGBUILD maki-reader-*.pkg.tar.zst
 #     git add PKGBUILD .SRCINFO && git commit -m "v$pkgver" && git push
 
-pkgname=maki
+pkgname=maki-reader
+_appname=maki
 pkgver=0.4.0
 pkgrel=1
 pkgdesc="A beautiful, fast ebook reader for Linux"
@@ -27,6 +29,7 @@ url="https://github.com/ovyas24/maki"
 license=(GPL-3.0-or-later)
 depends=(webkit2gtk-4.1 gtk3 libsoup3 glib2 cairo gdk-pixbuf2 pango hicolor-icon-theme)
 makedepends=(rust nodejs pnpm)
+conflicts=(maki) # occupied AUR package installs an unrelated /usr/bin/maki
 # Cargo does its own LTO (see [profile.release] in Cargo.toml). Disable makepkg's
 # C-level LTO: it injects -flto into CFLAGS, so the cc crate compiles rusqlite's
 # bundled sqlite3.c to GCC LTO bitcode that rust's lld linker can't resolve
@@ -37,28 +40,28 @@ source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
 sha256sums=('SKIP') # run `updpkgsums` after each release tag
 
 prepare() {
-  cd "$pkgname-$pkgver"
+  cd "$_appname-$pkgver"
   export PNPM_HOME="$srcdir/pnpm-home"
   pnpm config set store-dir "$srcdir/pnpm-store"
   pnpm install --frozen-lockfile
 }
 
 build() {
-  cd "$pkgname-$pkgver"
+  cd "$_appname-$pkgver"
   pnpm config set store-dir "$srcdir/pnpm-store"
   # builds the frontend (beforeBuildCommand) and the release binary; no bundles
   pnpm tauri build --no-bundle
 }
 
 package() {
-  cd "$pkgname-$pkgver"
-  install -Dm755 "src-tauri/target/release/$pkgname" "$pkgdir/usr/bin/$pkgname"
-  install -Dm644 packaging/maki.desktop "$pkgdir/usr/share/applications/$pkgname.desktop"
+  cd "$_appname-$pkgver"
+  install -Dm755 "src-tauri/target/release/$_appname" "$pkgdir/usr/bin/$_appname"
+  install -Dm644 packaging/maki.desktop "$pkgdir/usr/share/applications/$_appname.desktop"
   for size in 32 128 256 512; do
     install -Dm644 "src-tauri/icons/${size}x${size}.png" \
-      "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/$pkgname.png"
+      "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/$_appname.png"
   done
   install -Dm644 src-tauri/icons/icon.svg \
-    "$pkgdir/usr/share/icons/hicolor/scalable/apps/$pkgname.svg"
+    "$pkgdir/usr/share/icons/hicolor/scalable/apps/$_appname.svg"
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }

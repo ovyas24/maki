@@ -60,13 +60,14 @@ metadata fetching, text-to-speech, OPDS — see [ROADMAP.md](ROADMAP.md).
 ### Arch Linux
 
 ```sh
-yay -S maki
+yay -S maki-reader
+```
 
-## From source
+### Build from the AUR source
 
 ```sh
-git clone https://aur.archlinux.org/maki.git
-cd maki && makepkg -si
+git clone https://aur.archlinux.org/maki-reader.git
+cd maki-reader && makepkg -si
 ```
 
 ## For developers

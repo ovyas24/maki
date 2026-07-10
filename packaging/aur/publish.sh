@@ -17,7 +17,7 @@
 set -euo pipefail
 
 VERSION="${1:?usage: publish.sh <version>, e.g. publish.sh 0.1.0}"
-PKG=maki
+PKG=maki-reader
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WORK="$(mktemp -d)"
 

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Renamed the AUR package to `maki-reader`; `maki` is already owned by an
+  unrelated command-line task finder. The installed application and binary
+  remain `maki`.
+
 ## [0.4.0] - 2026-07-10
 
 ### Added
