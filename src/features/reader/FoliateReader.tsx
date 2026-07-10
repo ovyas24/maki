@@ -84,8 +84,8 @@ export function FoliateReader(props: Props) {
     annsRef.current = new Map(props.annotations.map((a) => [a.cfi, a]));
   });
 
-  // Paper page-turn effect: a soft leading-edge shadow sweeps across in the
-  // turn direction, synced over foliate's own page slide. `k` retriggers the
+  // Paper page-turn effect: ambient shading plus a soft fold and reflected
+  // paper edge sweep with foliate's own 300 ms page slide. `k` retriggers the
   // CSS animation on each turn.
   const [turn, setTurn] = useState<{ dir: "next" | "prev"; k: number } | null>(null);
   const turnKey = useRef(0);
@@ -96,7 +96,7 @@ export function FoliateReader(props: Props) {
     turnKey.current += 1;
     setTurn({ dir, k: turnKey.current });
     clearTimeout(turnTimer.current);
-    turnTimer.current = setTimeout(() => setTurn(null), 360);
+    turnTimer.current = setTimeout(() => setTurn(null), 340);
   }, []);
 
   // Open the book once per book id.
@@ -309,7 +309,10 @@ export function FoliateReader(props: Props) {
             "page-turn pointer-events-none absolute inset-0 overflow-hidden",
             turn.dir === "next" ? "page-turn-next" : "page-turn-prev",
           )}
-        />
+        >
+          <span className="page-turn-fold" />
+          <span className="page-turn-edge" />
+        </div>
       )}
     </div>
   );

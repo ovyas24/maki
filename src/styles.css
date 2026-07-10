@@ -203,43 +203,171 @@
 }
 
 /* ------------------------------------------------------------------ */
-/* Reader paper page-turn: a soft gutter shadow rides the seam of the   */
-/* turning page. A full-viewport leaf translates by exactly one page    */
-/* width with the same duration + easing as foliate's own slide (300ms  */
-/* easeOutQuad, paginator.js), so the shadow stays locked to the page.  */
+/* Reader paper page-turn. Foliate moves the content over 300ms with    */
+/* easeOutQuad; these ambient, fold, and reflected-edge layers follow   */
+/* the same timing so the motion reads as a flexible sheet, not a wipe. */
 /* ------------------------------------------------------------------ */
-.page-turn::after {
-  content: "";
+.page-turn {
+  --turn-duration: 300ms;
+  --turn-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  z-index: 3;
+  isolation: isolate;
+}
+
+.page-turn::before {
   position: absolute;
   inset: 0;
-  animation-duration: 300ms;
-  animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94); /* easeOutQuad */
+  content: "";
+  animation: page-turn-ambient var(--turn-duration) var(--turn-ease) both;
+}
+
+.page-turn-next::before {
+  background: linear-gradient(to left, rgb(0 0 0 / 0.14), transparent 42%);
+}
+
+.page-turn-prev::before {
+  background: linear-gradient(to right, rgb(0 0 0 / 0.14), transparent 42%);
+}
+
+.page-turn-fold,
+.page-turn-edge {
+  position: absolute;
+  top: -2%;
+  bottom: -2%;
+  display: block;
   animation-fill-mode: both;
+  animation-duration: var(--turn-duration);
+  animation-timing-function: var(--turn-ease);
+  will-change: transform, opacity;
 }
-/* next: outgoing page slides left — shadow on its trailing (right) edge */
-.page-turn-next::after {
-  background: linear-gradient(to right, transparent 86%, rgb(0 0 0 / 0.18) 100%);
-  animation-name: page-turn-next;
+
+.page-turn-fold {
+  width: clamp(90px, 15vw, 220px);
+  filter: blur(1px);
 }
-@keyframes page-turn-next {
+
+.page-turn-edge {
+  width: clamp(18px, 2.4vw, 38px);
+  filter: blur(0.35px);
+}
+
+.page-turn-next .page-turn-fold {
+  right: -10vw;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgb(0 0 0 / 0.03) 24%,
+    rgb(0 0 0 / 0.2) 46%,
+    rgb(255 255 255 / 0.13) 53%,
+    rgb(0 0 0 / 0.06) 60%,
+    transparent 82%
+  );
+  animation-name: page-fold-next;
+}
+
+.page-turn-prev .page-turn-fold {
+  left: -10vw;
+  background: linear-gradient(
+    to left,
+    transparent 0%,
+    rgb(0 0 0 / 0.03) 24%,
+    rgb(0 0 0 / 0.2) 46%,
+    rgb(255 255 255 / 0.13) 53%,
+    rgb(0 0 0 / 0.06) 60%,
+    transparent 82%
+  );
+  animation-name: page-fold-prev;
+}
+
+.page-turn-next .page-turn-edge {
+  right: -1.2vw;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgb(0 0 0 / 0.3) 38%,
+    rgb(255 255 255 / 0.34) 52%,
+    transparent 76%
+  );
+  animation-name: page-edge-next;
+}
+
+.page-turn-prev .page-turn-edge {
+  left: -1.2vw;
+  background: linear-gradient(
+    to left,
+    transparent,
+    rgb(0 0 0 / 0.3) 38%,
+    rgb(255 255 255 / 0.34) 52%,
+    transparent 76%
+  );
+  animation-name: page-edge-prev;
+}
+
+@keyframes page-turn-ambient {
+  0% {
+    opacity: 0;
+  }
+  35% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes page-fold-next {
   from {
-    transform: translateX(0);
+    opacity: 0;
+    transform: translateX(0) skewX(-1.2deg) scaleX(0.72);
+  }
+  18% {
+    opacity: 1;
   }
   to {
-    transform: translateX(-100%);
+    opacity: 0.72;
+    transform: translateX(calc(-100vw - 100%)) skewX(0.4deg) scaleX(1.08);
   }
 }
-/* prev: previous page slides in from the left — shadow on its left edge */
-.page-turn-prev::after {
-  background: linear-gradient(to left, transparent 86%, rgb(0 0 0 / 0.18) 100%);
-  animation-name: page-turn-prev;
-}
-@keyframes page-turn-prev {
+
+@keyframes page-fold-prev {
   from {
-    transform: translateX(0);
+    opacity: 0;
+    transform: translateX(0) skewX(1.2deg) scaleX(0.72);
+  }
+  18% {
+    opacity: 1;
   }
   to {
-    transform: translateX(100%);
+    opacity: 0.72;
+    transform: translateX(calc(100vw + 100%)) skewX(-0.4deg) scaleX(1.08);
+  }
+}
+
+@keyframes page-edge-next {
+  from {
+    opacity: 0;
+    transform: translateX(0) scaleX(0.65);
+  }
+  12% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.55;
+    transform: translateX(calc(-100vw - 100%)) scaleX(1.15);
+  }
+}
+
+@keyframes page-edge-prev {
+  from {
+    opacity: 0;
+    transform: translateX(0) scaleX(0.65);
+  }
+  12% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.55;
+    transform: translateX(calc(100vw + 100%)) scaleX(1.15);
   }
 }
 

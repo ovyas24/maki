@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-07-10
+
+### Added
+
+- Library filters for unread, in-progress, finished, and missing books, with
+  live counts and clearer empty states.
+- Accessible import summaries reporting imported, duplicate, unsupported,
+  and failed files.
+- Library and reader defaults in Settings, including view, sorting, font,
+  layout, page theme, and page animation.
+
+### Changed
+
+- Redesigned the sidebar with library counts, keyboard-shortcut access, and a
+  compact card for resuming the most recently opened book.
+- Rebuilt Settings as responsive preference cards with live visual previews,
+  clearer grouping, and robust watch-folder loading and error states.
+- Enhanced page turns with synchronized ambient shading, a soft paper fold,
+  and a reflected edge while preserving reduced-motion behavior.
+
 ### Fixed
 
 - The window's restored position is now clamped back on-screen at launch.
@@ -105,7 +125,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   window size/position, i18n scaffolding (English, Japanese stub).
 - Zero telemetry, zero network requests.
 
-[Unreleased]: https://github.com/ovyas24/maki/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/ovyas24/maki/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/ovyas24/maki/releases/tag/v0.4.0
 [0.3.0]: https://github.com/ovyas24/maki/releases/tag/v0.3.0
 [0.2.0]: https://github.com/ovyas24/maki/releases/tag/v0.2.0
 [0.1.1]: https://github.com/ovyas24/maki/releases/tag/v0.1.1

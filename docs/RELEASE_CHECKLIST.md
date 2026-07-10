@@ -1,4 +1,4 @@
-# Release checklist — cutting v0.1.0
+# Release checklist — cutting vX.Y.Z
 
 ## 0. Prerequisites (one-time)
 
@@ -24,8 +24,9 @@
 
 - [ ] Update `CHANGELOG.md` (move Unreleased → the version, date it).
 - [ ] Version is consistent: `package.json`, `src-tauri/tauri.conf.json`,
-      `src-tauri/Cargo.toml` all say `0.1.0`.
-- [ ] `git tag v0.1.0 && git push origin v0.1.0`
+      `src-tauri/Cargo.toml`, `src-tauri/core/Cargo.toml`, and
+      `packaging/aur/PKGBUILD` all match the release.
+- [ ] `git tag vX.Y.Z && git push origin vX.Y.Z`
 - [ ] The release workflow builds deb/rpm/AppImage + tarball and drafts a
       GitHub Release with the changelog excerpt. Review the draft, download
       and smoke-test the AppImage, then **publish**.
@@ -37,7 +38,7 @@ release tarball). The helper automates clone → checksum → .SRCINFO → test
 build → push:
 
 ```sh
-packaging/aur/publish.sh 0.1.0
+packaging/aur/publish.sh X.Y.Z
 ```
 
 Or manually:
